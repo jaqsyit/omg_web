@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:omg/constants/styles.dart';
+import 'package:omg/features/exam/exam_cubit.dart';
+import 'package:omg/models/exam_data.dart';
+import 'package:intl/intl.dart';
+
+class ExamScreen extends StatelessWidget {
+  final ExamData examData;
+
+  const ExamScreen(this.examData, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+        create: (_) => ExamCubit(context: context),
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Container(
+                padding: EdgeInsets.all(20),
+                width: double.infinity,
+                color: Colors.blue,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${examData.exam.workers.surname} ${examData.exam.workers.name} ${examData.exam.workers.lastname}',
+                      style: CustomTextStyles.s20w500cw,
+                    ),
+                    SizedBox(height: 10,),
+                    Text(
+                      '${examData.exam.workers.org.nameKk} ${examData.exam.workers.job}',
+                      style: CustomTextStyles.s18w500cw,
+                    ),
+                    Text(
+                      '${examData.exam.group.subject} (${examData.exam.group.chin})',
+                      style: CustomTextStyles.s18w500cw,
+                    ),
+                    Text(
+                      examData.exam.group.commission,
+                      style: CustomTextStyles.s18w500cw,
+                    ),
+                    Text(
+                      DateFormat('HH:mm      dd.MM.yyyy')
+                          .format(examData.exam.group.start),
+                      style: CustomTextStyles.s18w500cw,
+                    ),
+                    Text(
+                      DateFormat('HH:mm      dd.MM.yyyy')
+                          .format(examData.exam.group.end),
+                      style: CustomTextStyles.s18w500cw,
+                    ),
+                  ],
+                )),
+          ),
+        ));
+  }
+}
