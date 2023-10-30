@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omg/constants/styles.dart';
 import 'package:omg/features/exam/exam_cubit.dart';
+import 'package:omg/features/examing/examing_screen.dart';
 import 'package:omg/models/exam_data.dart';
 import 'package:intl/intl.dart';
 
@@ -13,11 +14,13 @@ class ExamScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => ExamCubit(context: context),
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.all(20),
+      create: (_) => ExamCubit(context: context),
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
                 width: double.infinity,
                 color: Colors.blue,
                 child: Column(
@@ -27,7 +30,9 @@ class ExamScreen extends StatelessWidget {
                       '${examData.exam.workers.surname} ${examData.exam.workers.name} ${examData.exam.workers.lastname}',
                       style: CustomTextStyles.s20w500cw,
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Text(
                       '${examData.exam.workers.org.nameKk} ${examData.exam.workers.job}',
                       style: CustomTextStyles.s18w500cw,
@@ -51,8 +56,25 @@ class ExamScreen extends StatelessWidget {
                       style: CustomTextStyles.s18w500cw,
                     ),
                   ],
-                )),
+                ),
+              ),
+              const SizedBox(height: 100),
+              const Text('Ескертулер'),
+              const SizedBox(height: 100),
+              ElevatedButton(
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExamingScreen(examData),
+                  ),
+                  (route) => false,
+                ),
+                child: const Text('БАСТАУ'),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

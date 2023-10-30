@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     loginController.text = 'm.aqyn';
     passwordController.text = '123123';
-    codeController.text = '443716';
+    codeController.text = '744021';
     return BlocProvider(
       create: (_) => LoginCubit(context: context),
       child: Scaffold(
