@@ -5,3 +5,5 @@ const String MID_URL = '/api/v1';
 
 const String LOGIN_URL = '/login';
 const String CHECK_CODE = '/check-code';
+const String PROFILE_URL = '/me';
+const String LOGOUT_URL = '/logout';

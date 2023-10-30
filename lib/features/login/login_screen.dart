@@ -9,11 +9,15 @@ class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   final passwordFocus = FocusNode();
+  
 
   LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    loginController.text = 'm.aqyn';
+    passwordController.text = '123123';
+    codeController.text = '443716';
     return BlocProvider(
       create: (_) => LoginCubit(context: context),
       child: Scaffold(
@@ -150,6 +154,7 @@ class LoginScreen extends StatelessWidget {
                                       ),
                                       TextFormField(
                                         controller: passwordController,
+                                        obscureText: true,
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           hintText: 'Пароль',

@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:omg/constants/urls.dart';
 import 'package:omg/features/exam/exam_screen.dart';
+import 'package:omg/features/profile/profile_screen.dart';
 import 'package:omg/models/exam_data.dart';
 import 'package:omg/models/login_data.dart';
 import 'package:omg/services/json_decoder.dart';
@@ -29,18 +30,30 @@ class LoginCubit extends Cubit<bool> {
       final LoginData loginData = LoginData.fromJson(decodedResponse);
       if (decodedResponse.containsKey('token')) {
         StorageManager storage = StorageManager();
-        storage.setToken(loginData.token);
-
-        if (!context.mounted) return;
-        print('login success. Token: ${loginData.token}');
-        // Navigator.pushAndRemoveUntil(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => const MainBar(),
-        //   ),
-        //   (route) => false,
-        // );
+        storage
+            .setToken(loginData.token)
+            .whenComplete(() => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfileScreen(),
+                  ),
+                  (route) => false,
+                ));
       }
+    } else if (response is String) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Қате'),
+          content: Text(response),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -60,12 +73,39 @@ class LoginCubit extends Cubit<bool> {
 
       if (decodedResponse.containsKey('exam')) {
         if (!context.mounted) return;
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ExamScreen(examData),
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Тексеріңіз!'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text('${examData.exam.workers.surname} ${examData.exam.workers.name}'),
+                  Text(examData.exam.group.subject),
+                  Text(examData.exam.group.chin),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'OK'),
+                child: const Text(
+                  'Мен емес',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExamScreen(examData),
+                  ),
+                  (route) => false,
+                ),
+                child: const Text('Иә'),
+              ),
+            ],
           ),
-          (route) => false,
         );
       }
     } else if (response is String) {
@@ -74,12 +114,12 @@ class LoginCubit extends Cubit<bool> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Қате'),
+          title: const Text('Қате'),
           content: Text(response),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, 'OK'),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         ),
