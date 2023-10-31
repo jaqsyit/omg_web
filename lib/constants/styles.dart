@@ -50,6 +50,13 @@ class AppStyles {
 }
 
 class CustomTextStyles {
+  static const questionTextStyle = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 25,
+  );
+  static const optionTextStyle = TextStyle(
+    fontSize: 20,
+  );
   static const TextStyle s10w600cw = TextStyle(
     color: Colors.white,
     fontSize: 10,

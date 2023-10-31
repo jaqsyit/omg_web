@@ -30,15 +30,16 @@ class LoginCubit extends Cubit<bool> {
       final LoginData loginData = LoginData.fromJson(decodedResponse);
       if (decodedResponse.containsKey('token')) {
         StorageManager storage = StorageManager();
-        storage
-            .setToken(loginData.token)
-            .whenComplete(() => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileScreen(),
-                  ),
-                  (route) => false,
-                ));
+        storage.setUserStatus('kontingent');
+        storage.setToken(loginData.token).whenComplete(
+              () => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+                (route) => false,
+              ),
+            );
       }
     } else if (response is String) {
       showDialog(
@@ -80,7 +81,8 @@ class LoginCubit extends Cubit<bool> {
             content: SingleChildScrollView(
               child: Column(
                 children: [
-                  Text('${examData.exam.workers.surname} ${examData.exam.workers.name}'),
+                  Text(
+                      '${examData.exam.workers.surname} ${examData.exam.workers.name}'),
                   Text(examData.exam.group.subject),
                   Text(examData.exam.group.chin),
                 ],

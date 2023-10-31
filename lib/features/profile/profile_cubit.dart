@@ -42,15 +42,16 @@ class ProfileCubit extends Cubit<ProfileState> {
     await NetworkHelper().get(url: LOGOUT_URL);
 
     StorageManager storage = StorageManager();
-    storage.deleteTokens();
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LoginScreen(),
-      ),
-      (route) => false,
-    );
+    storage.deleteUserStatus();
+    storage.deleteTokens().whenComplete(
+          () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ),
+            (route) => false,
+          ),
+        );
   }
 
   Future<void> newUser() async {

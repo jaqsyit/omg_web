@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omg/constants/styles.dart';
 import 'package:omg/features/exam/exam_cubit.dart';
-import 'package:omg/features/examing/examing_screen.dart';
 import 'package:omg/models/exam_data.dart';
 import 'package:intl/intl.dart';
 
@@ -62,13 +61,9 @@ class ExamScreen extends StatelessWidget {
               const Text('Ескертулер'),
               const SizedBox(height: 100),
               ElevatedButton(
-                onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ExamingScreen(examData),
-                  ),
-                  (route) => false,
-                ),
+                onPressed: () {
+                  ExamCubit(context: context).startExam();
+                },
                 child: const Text('БАСТАУ'),
               ),
             ],
