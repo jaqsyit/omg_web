@@ -14,35 +14,7 @@ class ExamingScreen extends StatefulWidget {
 }
 
 class _ExamingScreenState extends State<ExamingScreen> {
-  int currentIndex = 0;
-
-  Map<int, int> selectedOptions = {};
-
   List<List<String>> answers = [];
-
-  void goToNextQuestion() {
-    setState(() {
-      currentIndex++;
-    });
-  }
-
-  void goToPreviousQuestion() {
-    setState(() {
-      currentIndex--;
-    });
-  }
-
-  void goToQuestion(int questionIndex) {
-    setState(() {
-      currentIndex = questionIndex;
-    });
-  }
-
-  void selectOption(int optionIndex) {
-    setState(() {
-      selectedOptions[currentIndex] = optionIndex;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,85 +28,120 @@ class _ExamingScreenState extends State<ExamingScreen> {
               if (state is ExamingLoading) {
                 return const LoadingWidget();
               } else if (state is ExamingLoaded) {
-                bool isFirstQuestion = currentIndex == 0;
+                int questionIndex = state.currentIndex ?? 0;
+                bool isFirstQuestion = questionIndex == 0;
                 bool isLastQuestion =
-                    currentIndex == state.data.questions.length - 1;
-                return Container(
-                  margin: const EdgeInsets.all(100),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Wrap(
+                    questionIndex == state.data!.questions.length - 1;
+                return Center(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                color: Colors.black12,
+                                padding: const EdgeInsets.all(25),
+                                child: Wrap(
                                   spacing: 8.0,
                                   runSpacing: 8.0,
                                   children: [
                                     for (int i = 0;
-                                        i < state.data.questions.length;
+                                        i < state.data!.questions.length;
                                         i++)
                                       ElevatedButton(
                                         onPressed: () {
-                                          goToQuestion(i);
+                                          examingCubit.goToQuestion(i);
                                         },
                                         child: Text((i + 1).toString()),
                                       ),
                                   ],
                                 ),
-                                const SizedBox(height: 16.0),
-                                Text(
-                                  'Сұрақ № ${currentIndex + 1}, барлығы ${state.data.questions.length}:',
-                                  style: CustomTextStyles.questionTextStyle,
+                              ),
+                              const SizedBox(height: 16.0),
+                              Container(
+                                padding: const EdgeInsets.all(25),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Сұрақ № ${questionIndex + 1}, барлығы ${state.data!.questions.length}:',
+                                      style: CustomTextStyles.questionTextStyle,
+                                    ),
+                                    Text(
+                                      state.data!.questions[questionIndex]
+                                          .question, // Use questionIndex here
+                                      style: CustomTextStyles.questionTextStyle,
+                                    ),
+                                    const SizedBox(height: 16.0),
+                                    SizedBox(
+                                      height: 700,
+                                      child: ListView.builder(
+                                        itemCount: state
+                                            .data!
+                                            .questions[questionIndex]
+                                            .options
+                                            .length,
+                                        itemBuilder: (context, i) {
+                                          final answerText = state
+                                              .data!
+                                              .questions[questionIndex]
+                                              .options[i];
+                                          return ListTile(
+                                            title: Text(
+                                              answerText,
+                                              style: CustomTextStyles
+                                                  .optionTextStyle,
+                                            ),
+                                            leading: Radio(
+                                              value: i,
+                                              groupValue: state
+                                                          .selectedOptions !=
+                                                      null
+                                                  ? state.selectedOptions!
+                                                          .containsKey(
+                                                              questionIndex)
+                                                      ? state.selectedOptions![
+                                                          questionIndex]
+                                                      : null
+                                                  : null,
+                                              onChanged: (int? value) {
+                                                examingCubit.selectOption(
+                                                    value!, questionIndex);
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  state.data.questions[currentIndex]
-                                      .question, // Use currentIndex here
-                                  style: CustomTextStyles.questionTextStyle,
-                                ),
-                                const SizedBox(height: 16.0),
-                                SizedBox(
-                                  height: 700,
-                                  child: ListView.builder(
-                                    itemCount: state.data
-                                        .questions[currentIndex].options.length,
-                                    itemBuilder: (context, i) {
-                                      final answerText = state.data
-                                          .questions[currentIndex].options[i];
-                                      return ListTile(
-                                        title: Text(
-                                          answerText,
-                                          style:
-                                              CustomTextStyles.optionTextStyle,
-                                        ),
-                                        leading: Radio(
-                                          value: i,
-                                          groupValue: selectedOptions
-                                                  .containsKey(currentIndex)
-                                              ? selectedOptions[currentIndex]
-                                              : null,
-                                          onChanged: (int? value) {
-                                            selectOption(value!);
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                        Row(
+                      ),
+                      Container(
+                        color: Colors.black12,
+                        padding: const EdgeInsets.all(25),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const SizedBox(width: 16),
                             if (!isFirstQuestion)
                               ElevatedButton(
-                                onPressed: goToPreviousQuestion,
+                                style: const ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStatePropertyAll<Color>(
+                                          Colors.green),
+                                ),
+                                onPressed: () {
+                                  questionIndex--;
+                                  examingCubit.goToQuestion(questionIndex);
+                                },
                                 child: const Text(
                                   'Артқа',
                                   style: CustomTextStyles.questionTextStyle,
@@ -143,14 +150,31 @@ class _ExamingScreenState extends State<ExamingScreen> {
                             const SizedBox(width: 16),
                             if (!isLastQuestion)
                               ElevatedButton(
-                                onPressed: goToNextQuestion,
+                                style: const ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStatePropertyAll<Color>(
+                                          Colors.green),
+                                ),
+                                onPressed: () {
+                                  questionIndex++;
+                                  examingCubit.goToQuestion(questionIndex);
+                                },
                                 child: const Text(
                                   'Келесі',
                                   style: CustomTextStyles.questionTextStyle,
                                 ),
                               ),
-                            const SizedBox(width: 16),
+                            const Spacer(),
+                            Text(
+                              state.examTimer.toString(),
+                              style: CustomTextStyles.s26w700cb,
+                            ),
+                            const SizedBox(width: 30),
                             ElevatedButton(
+                              style: const ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll<Color>(Colors.red),
+                              ),
                               child: const Text(
                                 'Аяқтау',
                                 style: CustomTextStyles.questionTextStyle,
@@ -159,8 +183,8 @@ class _ExamingScreenState extends State<ExamingScreen> {
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               } else if (state is ExamingError) {

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:omg/features/examing/examing_screen.dart';
 import 'package:omg/features/login/login_screen.dart';
 import 'package:omg/features/profile/profile_screen.dart';
+import 'package:omg/services/hive_helper.dart';
 import 'package:omg/services/storage_helper.dart';
 
-void main() {
+void main() async{
+  await Hive.initFlutter();
+  Hive.registerAdapter(QuestionAdapter());
   runApp(MyApp());
 }
 

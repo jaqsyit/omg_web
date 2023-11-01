@@ -30,7 +30,7 @@ class ExamingData {
 
 class Question {
     String question;
-    List<String> options;
+    List<dynamic> options;
     int correctOption;
 
     Question({
@@ -41,7 +41,7 @@ class Question {
 
     factory Question.fromJson(Map<String, dynamic> json) => Question(
         question: json["question"],
-        options: List<String>.from(json["options"].map((x) => x)),
+        options: List<dynamic>.from(json["options"].map((x) => x)),
         correctOption: json["correct_option"],
     );
 

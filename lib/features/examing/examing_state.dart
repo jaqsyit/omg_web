@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:omg/models/examing_data.dart';
 
@@ -6,11 +7,26 @@ abstract class ExamingState {}
 class ExamingLoading extends ExamingState {}
 
 class ExamingLoaded extends ExamingState {
-  final ExamingData data;
+  ExamingData? data;
+  int? currentIndex;
+  Map<int, int>? selectedOptions;
+  String? examTimer;
 
-  ExamingLoaded({required this.data});
+  ExamingLoaded({this.data, this.currentIndex, this.selectedOptions, this.examTimer});
 
-  // ExamingData get examingData => null;
+  ExamingLoaded copyWith({
+    ExamingData? newExamingData,
+    int? newCurrentIndex,
+    Map<int, int>? newSelectedOptions,
+    String? newExamTime
+  }) {
+    return ExamingLoaded(
+      data: newExamingData ?? data,
+      currentIndex: newCurrentIndex ?? currentIndex,
+      selectedOptions: newSelectedOptions ?? selectedOptions,
+      examTimer: newExamTime ?? examTimer
+    );
+  }
 }
 
 class ExamingError extends ExamingState {
