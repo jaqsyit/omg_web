@@ -166,7 +166,9 @@ class _ExamingScreenState extends State<ExamingScreen> {
                               ),
                             const Spacer(),
                             Text(
-                              state.examTimer.toString(),
+                              state.examTimer != null
+                                  ? state.examTimer.toString()
+                                  : '--:--',
                               style: CustomTextStyles.s26w700cb,
                             ),
                             const SizedBox(width: 30),
@@ -179,7 +181,23 @@ class _ExamingScreenState extends State<ExamingScreen> {
                                 'Аяқтау',
                                 style: CustomTextStyles.questionTextStyle,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Растаңыз'),
+                                    content: const Text(
+                                        'Емтиханды аяқтау үшін ОК басыңыз'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            examingCubit.stopExaming(),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),

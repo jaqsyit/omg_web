@@ -8,3 +8,4 @@ const String CHECK_CODE = '/check-code';
 const String PROFILE_URL = '/me';
 const String LOGOUT_URL = '/logout';
 const String START_URL = '/start';
+const String END_URL = '/end';

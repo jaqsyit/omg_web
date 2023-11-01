@@ -13,7 +13,7 @@ class ExamScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ExamCubit(context: context),
+      create: (_) => ExamCubit(context: context, examData: examData),
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -62,7 +62,7 @@ class ExamScreen extends StatelessWidget {
               const SizedBox(height: 100),
               ElevatedButton(
                 onPressed: () {
-                  ExamCubit(context: context).startExam();
+                  ExamCubit(context: context, examData: examData).startExam();
                 },
                 child: const Text('БАСТАУ'),
               ),

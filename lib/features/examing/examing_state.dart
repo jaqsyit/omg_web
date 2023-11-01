@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:omg/models/examing_data.dart';
 
 abstract class ExamingState {}
