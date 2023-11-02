@@ -6,7 +6,6 @@ import 'package:omg/constants/urls.dart';
 import 'package:omg/services/storage_helper.dart';
 
 class ApiClient {
-
   ApiClient();
 
   Future<http.Response> get(
@@ -56,6 +55,32 @@ class ApiClient {
         Uri.http(BASE_URL, requestURL, parameters),
         headers: _buildHeaders(withToken, accessToken),
         body: body ?? jsonBody,
+      );
+
+      return response;
+    } catch (e) {
+      return _handleError(e);
+    }
+  }
+
+  Future<http.Response> delete(
+    String url, {
+    Map<String, String>? parameters,
+    bool withToken = true,
+  }) async {
+    final storage = StorageManager();
+    String requestURL = '$MID_URL$url/${parameters?['id']}';
+
+    String? accessToken;
+
+    if (withToken) {
+      accessToken = await storage.getAccessToken();
+    }
+
+    try {
+      final response = await http.delete(
+        Uri.http(BASE_URL, requestURL, parameters),
+        headers: _buildHeaders(withToken, accessToken),
       );
 
       return response;

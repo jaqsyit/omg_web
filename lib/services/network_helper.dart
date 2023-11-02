@@ -24,6 +24,7 @@ class NetworkHelper {
     Map<String, dynamic>? body,
     Object? jsonBody,
   }) async {
+    print(body);
     final response = await apiClient.post(url,
         parameters: parameters,
         withToken: withToken,
@@ -31,6 +32,15 @@ class NetworkHelper {
         jsonBody: jsonBody);
     return _handleResponse(response);
   }
+
+  Future<dynamic> delete({
+  required String url,
+  Map<String, String>? parameters,
+  bool withToken = true,
+}) async {
+  final response = await apiClient.delete(url,parameters: parameters);
+  return _handleResponse(response);
+}
 
   dynamic _handleResponse(http.Response response) {
     if (response.statusCode == 200) {

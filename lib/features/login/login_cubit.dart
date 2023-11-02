@@ -30,8 +30,8 @@ class LoginCubit extends Cubit<bool> {
       final LoginData loginData = LoginData.fromJson(decodedResponse);
       if (decodedResponse.containsKey('token')) {
         StorageManager storage = StorageManager();
-        storage.setUserStatus('kontingent');
-        storage.setToken(loginData.token).whenComplete(
+        await storage.setUserStatus('kontingent');
+        await storage.setToken(loginData.token).whenComplete(
               () => Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(

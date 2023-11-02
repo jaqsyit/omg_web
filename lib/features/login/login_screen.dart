@@ -9,7 +9,6 @@ class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   final passwordFocus = FocusNode();
-  
 
   LoginScreen({Key? key}) : super(key: key);
 
@@ -54,7 +53,7 @@ class LoginScreen extends StatelessWidget {
                             'assets/img/logo_round.jpeg',
                             scale: 2,
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           const Text(
                             'Коорпоративтік Оқу Орталығы',
                             style: TextStyle(
@@ -62,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black),
                           ),
-                          SizedBox(height: 60),
+                          const SizedBox(height: 60),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -88,10 +87,8 @@ class LoginScreen extends StatelessWidget {
                                         return null;
                                       },
                                     ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Container(
+                                    const SizedBox(height: 20),
+                                    SizedBox(
                                       height: 40,
                                       width: double.infinity,
                                       child: ElevatedButton(
@@ -173,14 +170,14 @@ class LoginScreen extends StatelessWidget {
                                         },
                                       ),
                                       const SizedBox(height: 20),
-                                      Container(
+                                      SizedBox(
                                         height: 40,
                                         width: double.infinity,
                                         child: ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all<Color>(
-                                                    Colors.green),
+                                                MaterialStateProperty.all<
+                                                    Color>(Colors.green),
                                           ),
                                           child: const Text(
                                             'Кіру',
@@ -202,8 +199,8 @@ class LoginScreen extends StatelessWidget {
                                           },
                                         ),
                                       ),
-                                      SizedBox(height: 10),
-                                      Text(
+                                      const SizedBox(height: 10),
+                                      const Text(
                                         'Тіркелу үшін директорға жолығыңыз',
                                         style: TextStyle(color: Colors.grey),
                                       )

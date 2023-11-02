@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omg/constants/urls.dart';
+import 'package:omg/features/groups/groups_screen.dart';
 import 'package:omg/features/login/login_screen.dart';
 import 'package:omg/features/profile/profile_state.dart';
 import 'package:omg/models/profile_data.dart';
@@ -73,5 +74,15 @@ class ProfileCubit extends Cubit<ProfileState> {
     } else {
       emit(ProfileError(errMsg: 'Unknown error!'));
     }
+  }
+
+  void goToGroups() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GroupsScreen(),
+      ),
+      (route) => false,
+    );
   }
 }

@@ -10,18 +10,18 @@ class ErrorColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 35,),
-            Text(errMsg ?? 'Неизвестная ошибка', style: TextStyle(
+            const Icon(Icons.error_outline, size: 35,),
+            Text(errMsg ?? 'Неизвестная ошибка', style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w500
             ), textAlign: TextAlign.center,),
 
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
 

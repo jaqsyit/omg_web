@@ -19,11 +19,11 @@ class ExamCubit extends Cubit<ExamState> {
     timerBox.put('remainingTime', differenceInSeconds);
 
     StorageManager storage = StorageManager();
-    storage.setUserStatus('examing').whenComplete(
+    await storage.setUserStatus('examing').whenComplete(
           () => Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => ExamingScreen(),
+              builder: (context) => const ExamingScreen(),
             ),
             (route) => false,
           ),
