@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:omg/constants/urls.dart';
+import 'package:omg/features/bottom/bottom_bar.dart';
 import 'package:omg/features/exam/exam_screen.dart';
-import 'package:omg/features/profile/profile_screen.dart';
 import 'package:omg/models/exam_data.dart';
 import 'package:omg/models/login_data.dart';
 import 'package:omg/services/json_decoder.dart';
@@ -35,7 +35,7 @@ class LoginCubit extends Cubit<bool> {
               () => Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
+                  builder: (context) => const MainBar(),
                 ),
                 (route) => false,
               ),

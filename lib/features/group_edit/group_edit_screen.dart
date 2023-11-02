@@ -35,13 +35,18 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
   @override
   void initState() {
     super.initState();
-    quantity = widget.group!.quantity;
-    passedOn = widget.group!.passedOn;
-    selectedTime = TimeOfDay(
-        hour: widget.group!.start.hour, minute: widget.group!.start.minute);
-    selectedDate = widget.group!.start;
-    newSubject = widget.group!.subject;
-    newChin = widget.group!.chin;
+    quantity = widget.group != null ? widget.group!.quantity : 0;
+    passedOn = widget.group != null ? widget.group!.passedOn : 0;
+    widget.group != null
+        ? selectedTime = TimeOfDay(
+            hour: widget.group!.start.hour, minute: widget.group!.start.minute)
+        : null;
+        widget.group != null ?
+    selectedDate = widget.group!.start :null;
+    widget.group != null ?
+    newSubject = widget.group!.subject :null;
+    widget.group != null ?
+    newChin = widget.group!.chin :null;
     commission.text = widget.group == null ? '' : widget.group!.commission;
   }
 
@@ -69,7 +74,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
   Future<void> newGroup(String? idGroup) async {
     DateTime newStart = DateTime(selectedDate!.year, selectedDate!.month,
         selectedDate!.day, selectedTime!.hour, selectedTime!.minute);
-    DateTime newEnd = newStart.add(Duration(minutes: 40));
+    DateTime newEnd = newStart.add(const Duration(minutes: 40));
 
     final response = await NetworkHelper().post(url: GROUPS_URL, body: {
       'idGroup': idGroup != '' ? idGroup : null,
@@ -116,22 +121,23 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Емтиханды өзгерту'),
+        title: const Text('Емтиханды өзгерту'),
       ),
       body: Container(
         width: double.infinity,
-        margin: EdgeInsets.all(50),
+        margin: const EdgeInsets.all(50),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text('№${widget.group!.id} емтихан'),
+              // widget.group != null ?
+              // Text('№${widget.group!.id} емтихан') :const SizedBox(),
               const SizedBox(height: 20),
               Row(
                 children: [
                   DropdownButton<String>(
-                    value: newSubject,
+                    value: newSubject != '' ? newSubject : 'Еңбек қауіпсіздігі және еңбекті қорғау',
                     items: const [
                       DropdownMenuItem(
                         value: 'Еңбек қауіпсіздігі және еңбекті қорғау',
@@ -158,7 +164,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                   ),
                   const SizedBox(width: 20),
                   DropdownButton<String>(
-                    value: newChin,
+                    value: newChin != '' ? newChin : 'ИТР',
                     items: const [
                       DropdownMenuItem(
                         value: 'ИТР',
@@ -226,7 +232,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                        'Басталу күні: ${DateFormat('dd.MM.yy').format(selectedDate!)}'),
+                        'Басталу күні: ${DateFormat('dd.MM.yy').format(selectedDate ?? DateTime.now())}'),
                     const SizedBox(height: 10),
                     Text('Бастау уақыты: ${selectedTime?.format(context)}'),
                   ],
@@ -282,7 +288,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      newGroup(widget.group!.id.toString());
+                      // newGroup(widget.group != null ? widget.group!.id.toString() : null);
                     },
                     child: const Text('Өзгертулерді сақтау'),
                   ),
@@ -291,7 +297,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.red)),
                     onPressed: () {
-                      deleteGroup(widget.group!.id);
+                      // deleteGroup(widget.group!.id);
                     },
                     child: const Text('Емтиханды кетіру'),
                   ),

@@ -49,22 +49,13 @@ class ProfileScreen extends StatelessWidget {
                             Text(state.data.email),
                             Text(state.data.status),
                             ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.red)),
                               onPressed: () {
                                 ProfileCubit(context: context).logout();
                               },
                               child: const Text('Шығу'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                ProfileCubit(context: context).newUser();
-                              },
-                              child: const Text('Жаңа мұғалім тіркеу'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                ProfileCubit(context: context).goToGroups();
-                              },
-                              child: const Text('Емтихандар'),
                             ),
                           ],
                         ),

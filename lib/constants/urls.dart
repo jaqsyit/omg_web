@@ -10,3 +10,4 @@ const String LOGOUT_URL = '/logout';
 const String START_URL = '/start';
 const String END_URL = '/end';
 const String GROUPS_URL = '/groups';
+const String WORKERS_URL = '/workers';

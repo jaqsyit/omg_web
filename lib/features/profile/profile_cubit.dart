@@ -80,7 +80,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => GroupsScreen(),
+        builder: (context) => const GroupsScreen(),
       ),
       (route) => false,
     );

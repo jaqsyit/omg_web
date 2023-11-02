@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omg/features/groups/groups_screen.dart';
 import 'package:omg/features/profile/profile_screen.dart';
+import 'package:omg/features/workers/workers_screen.dart';
 
 class MainBar extends StatefulWidget {
   const MainBar({super.key});
@@ -13,8 +14,8 @@ class _MainBarState extends State<MainBar> {
   int _selectedIndex = 0;
 
   final tabs = [
-    Placeholder(),
-    Placeholder(),
+    const Placeholder(),
+    const WorkersScreen(),
     const GroupsScreen(),
     const ProfileScreen(),
   ];

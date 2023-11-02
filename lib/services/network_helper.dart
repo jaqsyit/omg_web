@@ -24,7 +24,6 @@ class NetworkHelper {
     Map<String, dynamic>? body,
     Object? jsonBody,
   }) async {
-    print(body);
     final response = await apiClient.post(url,
         parameters: parameters,
         withToken: withToken,

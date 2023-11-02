@@ -10,10 +10,10 @@ class ExamingScreen extends StatefulWidget {
   const ExamingScreen({Key? key}) : super(key: key);
 
   @override
-  _ExamingScreenState createState() => _ExamingScreenState();
+  ExamingScreenState createState() => ExamingScreenState();
 }
 
-class _ExamingScreenState extends State<ExamingScreen> {
+class ExamingScreenState extends State<ExamingScreen> {
   List<List<String>> answers = [];
 
   @override
@@ -53,6 +53,19 @@ class _ExamingScreenState extends State<ExamingScreen> {
                                         i < state.data!.questions.length;
                                         i++)
                                       ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: state.selectedOptions?[i] != null &&
+                                                  state.selectedOptions![i]! >= 0
+                                              ? Colors.blue
+                                              : Colors.grey,
+                                          onPrimary: Colors.white,
+                                          side: BorderSide(
+                                            color: i == questionIndex
+                                                ? Colors.blue
+                                                : Colors.transparent,
+                                            width: 5.0,
+                                          ),
+                                        ),
                                         onPressed: () {
                                           examingCubit.goToQuestion(i);
                                         },
