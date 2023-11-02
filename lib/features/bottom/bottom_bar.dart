@@ -36,7 +36,7 @@ class _MainBarState extends State<MainBar> {
             label: 'Статистика',
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.app_registration_rounded),
+            icon: Icon(Icons.groups),
             label: 'Жұмысшылар',
           ),
           const BottomNavigationBarItem(

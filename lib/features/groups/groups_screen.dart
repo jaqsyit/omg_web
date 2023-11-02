@@ -23,102 +23,83 @@ class GroupsScreen extends StatelessWidget {
               if (state is GroupsLoading) {
                 return const LoadingWidget();
               } else if (state is GroupsLoaded) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => GroupEditScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text('Жаңа емтихан тіркеу')),
+                return SingleChildScrollView(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      headingRowColor: MaterialStateProperty.all(Colors.blue),
+                      headingTextStyle: CustomTextStyles.s16w400cw,
+                      columns: const [
+                        DataColumn(
+                          label: Text('№'),
+                          numeric: true,
                         ),
-                        DataTable(
-                          headingRowColor:
-                              MaterialStateProperty.all(Colors.blue),
-                          headingTextStyle: CustomTextStyles.s16w400cw,
-                          columns: const [
-                            DataColumn(
-                              label: Text('№'),
-                              numeric:
-                                  true, // указывает, что это числовой столбец
-                            ),
-                            DataColumn(label: Text('Басталуы')),
-                            DataColumn(label: Text('Пән')),
-                            DataColumn(label: Text('Тобы')),
-                            DataColumn(label: Text('Комиссия')),
-                          ],
-                          rows: state.data.data.map((item) {
-                            String examDuration =
-                                '${DateFormat('HH:mm').format(item.start)}-${DateFormat('HH:mm').format(item.end)} ${DateFormat('dd.MM.yyyy').format(item.start)}';
-                            return DataRow(cells: [
-                              DataCell(
-                                Text(item.id.toString()),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            GroupEditScreen(group: item)),
-                                  );
-                                },
-                              ),
-                              DataCell(
-                                Text(examDuration),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            GroupEditScreen(group: item)),
-                                  );
-                                },
-                              ),
-                              DataCell(
-                                Text(item.subject),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            GroupEditScreen(group: item)),
-                                  );
-                                },
-                              ),
-                              DataCell(
-                                Text(item.chin),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            GroupEditScreen(group: item)),
-                                  );
-                                },
-                              ),
-                              DataCell(
-                                Text(item.commission),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            GroupEditScreen(group: item)),
-                                  );
-                                },
-                              ),
-                            ]);
-                          }).toList(),
-                        ),
+                        DataColumn(label: Text('Басталуы')),
+                        DataColumn(label: Text('Пән')),
+                        DataColumn(label: Text('Тобы')),
+                        DataColumn(label: Text('Комиссия')),
                       ],
+                      rows: state.data.data.map((item) {
+                        String examDuration =
+                            '${DateFormat('HH:mm').format(item.start)}-${DateFormat('HH:mm').format(item.end)} ${DateFormat('dd.MM.yyyy').format(item.start)}';
+                        return DataRow(cells: [
+                          DataCell(
+                            Text(item.id.toString()),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        GroupEditScreen(group: item)),
+                              );
+                            },
+                          ),
+                          DataCell(
+                            Text(examDuration),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        GroupEditScreen(group: item)),
+                              );
+                            },
+                          ),
+                          DataCell(
+                            Text(item.subject),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        GroupEditScreen(group: item)),
+                              );
+                            },
+                          ),
+                          DataCell(
+                            Text(item.chin),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        GroupEditScreen(group: item)),
+                              );
+                            },
+                          ),
+                          DataCell(
+                            Text(item.commission),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        GroupEditScreen(group: item)),
+                              );
+                            },
+                          ),
+                        ]);
+                      }).toList(),
                     ),
                   ),
                 );
@@ -134,6 +115,19 @@ class GroupsScreen extends StatelessWidget {
               }
             },
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GroupEditScreen(),
+              ),
+            );
+          },
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.blue,
+          child: const Icon(Icons.add),
         ),
       ),
     );
