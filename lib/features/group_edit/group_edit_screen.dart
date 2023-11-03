@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:omg/constants/styles.dart';
 import 'package:omg/constants/urls.dart';
 import 'package:omg/models/group_add_data.dart';
 import 'package:omg/models/group_delete_data.dart';
 import 'package:omg/models/groups_list_data.dart';
+import 'package:omg/models/workers_list_data.dart' as workers;
 import 'package:omg/services/json_decoder.dart';
 import 'package:omg/services/network_helper.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class GroupEditScreen extends StatefulWidget {
   final Datum? group;
@@ -19,10 +22,15 @@ class GroupEditScreen extends StatefulWidget {
 
 class _GroupEditScreenState extends State<GroupEditScreen> {
   final TextEditingController commission = TextEditingController();
+  final TextEditingController examDuration = TextEditingController();
+  final TextEditingController searchWorkerController = TextEditingController();
+  String selectedWorker = '1';
   String newChin = '';
   String newSubject = '';
   int quantity = 0;
   int passedOn = 0;
+  int workerId = -1;
+  late workers.WorkersListData workersList;
 
   DateTime? selectedDate;
 
@@ -35,19 +43,18 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
   @override
   void initState() {
     super.initState();
-    quantity = widget.group != null ? widget.group!.quantity : 0;
-    passedOn = widget.group != null ? widget.group!.passedOn : 0;
+    examDuration.text = '40';
+    quantity = widget.group != null ? widget.group!.quantity! : 0;
+    passedOn = widget.group != null ? widget.group!.passedOn! : 0;
     widget.group != null
         ? selectedTime = TimeOfDay(
-            hour: widget.group!.start.hour, minute: widget.group!.start.minute)
+            hour: widget.group!.start!.hour,
+            minute: widget.group!.start!.minute)
         : null;
-        widget.group != null ?
-    selectedDate = widget.group!.start :null;
-    widget.group != null ?
-    newSubject = widget.group!.subject :null;
-    widget.group != null ?
-    newChin = widget.group!.chin :null;
-    commission.text = widget.group == null ? '' : widget.group!.commission;
+    widget.group != null ? selectedDate = widget.group!.start : null;
+    widget.group != null ? newSubject = widget.group!.subject! : null;
+    widget.group != null ? newChin = widget.group!.chin! : null;
+    commission.text = widget.group == null ? '' : widget.group!.commission!;
   }
 
   @override
@@ -74,7 +81,8 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
   Future<void> newGroup(String? idGroup) async {
     DateTime newStart = DateTime(selectedDate!.year, selectedDate!.month,
         selectedDate!.day, selectedTime!.hour, selectedTime!.minute);
-    DateTime newEnd = newStart.add(const Duration(minutes: 40));
+    DateTime newEnd =
+        newStart.add(Duration(minutes: int.parse(examDuration.text)));
 
     final response = await NetworkHelper().post(url: GROUPS_URL, body: {
       'idGroup': idGroup != '' ? idGroup : null,
@@ -91,7 +99,55 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
       final decodedResponse = JsonDecoder().responseToMap(response);
 
       final GroupEditData dataDecoded = GroupEditData.fromJson(decodedResponse);
-      print(dataDecoded.success);
+      if (dataDecoded.success != null) {
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Емтихан'),
+              content: const Text('Емтихан жаңартылды'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'OK'),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    } else if (response is String) {
+      print(response);
+    } else {
+      print('object');
+    }
+  }
+
+  Future<void> newExam(int idGroup, int idWorker) async {
+    final response = await NetworkHelper().post(url: EXAM_URL, body: {
+      'group_id': idGroup.toString(),
+      'worker_id': idWorker.toString(),
+    });
+
+    if (response is Response) {
+      final decodedResponse = JsonDecoder().responseToMap(response);
+      if (decodedResponse.containsKey('success')) {
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Емтихан'),
+              content: const Text('Жұмысшы емтиханға қосылды'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'OK'),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      }
     } else if (response is String) {
       print(response);
     } else {
@@ -110,6 +166,23 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
       final GroupDeleteData dataDecoded =
           GroupDeleteData.fromJson(decodedResponse);
       print(dataDecoded.success);
+    } else if (response is String) {
+      print(response);
+    } else {
+      print('object');
+    }
+  }
+
+  Future<workers.WorkersListData?> getWorkers() async {
+    final response = await NetworkHelper().get(url: WORKERS_URL);
+
+    if (response is Response) {
+      final decodedResponse = JsonDecoder().responseToMap(response);
+      if (decodedResponse.containsKey('data')) {
+        final workers.WorkersListData dataDecoded =
+            workers.WorkersListData.fromJson(decodedResponse);
+        return dataDecoded;
+      }
     } else if (response is String) {
       print(response);
     } else {
@@ -137,7 +210,9 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
               Row(
                 children: [
                   DropdownButton<String>(
-                    value: newSubject != '' ? newSubject : 'Еңбек қауіпсіздігі және еңбекті қорғау',
+                    value: newSubject != ''
+                        ? newSubject
+                        : 'Еңбек қауіпсіздігі және еңбекті қорғау',
                     items: const [
                       DropdownMenuItem(
                         value: 'Еңбек қауіпсіздігі және еңбекті қорғау',
@@ -213,7 +288,157 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                 },
               ),
               const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: DataTable(
+                  headingRowColor: MaterialStateProperty.all(Colors.blue),
+                  headingTextStyle: CustomTextStyles.s16w400cw,
+                  columns: const [
+                    DataColumn(
+                      label: Text('№'),
+                      numeric: true,
+                    ),
+                    DataColumn(label: Text('ФИО')),
+                    DataColumn(label: Text('Мекеме')),
+                    DataColumn(label: Text('Емтихан тапсырылды')),
+                    DataColumn(label: Text('Нәтиже')),
+                  ],
+                  rows: widget.group!.exam!.map((item) {
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(item.id.toString())),
+                        DataCell(Text(
+                            '${item.workers!.surname} ${item.workers!.name}')),
+                        DataCell(Text(item.workers!.org!.nameKk ?? '')),
+                        DataCell(Text(item.updatedAt ?? '')),
+                        DataCell(Text(
+                          item.pass == 1 ? 'Өтті' : 'Құлады',
+                          style: TextStyle(
+                              color: item.pass == 1 ? Colors.blue : Colors.red),
+                        )),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
               Container(
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                child: FutureBuilder(
+                  future: getWorkers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data != null) {
+                        return Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Жұмысшы',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: snapshot.data!.data!
+                                      .map((item) => DropdownMenuItem<String>(
+                                            value: item.id.toString(),
+                                            child: Text(
+                                              '${item.surname!} ${item.name}',
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: selectedWorker,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedWorker = value!;
+                                    });
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 40,
+                                    // width: 200,
+                                  ),
+                                  dropdownStyleData: const DropdownStyleData(
+                                    maxHeight: 500,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                  dropdownSearchData: DropdownSearchData(
+                                    searchController: searchWorkerController,
+                                    searchInnerWidgetHeight: 50,
+                                    searchInnerWidget: Container(
+                                      height: 50,
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        bottom: 4,
+                                        right: 8,
+                                        left: 8,
+                                      ),
+                                      child: TextFormField(
+                                        expands: true,
+                                        maxLines: null,
+                                        controller: searchWorkerController,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 8,
+                                          ),
+                                          hintText: 'Іздеу',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 20),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    searchMatchFn: (item, searchValue) {
+                                      return item.value
+                                          .toString()
+                                          .contains(searchValue);
+                                    },
+                                  ),
+                                  onMenuStateChange: (isOpen) {
+                                    if (!isOpen) {
+                                      // searchMarkController.clear();
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            ElevatedButton(
+                              onPressed: () {
+                                newExam(widget.group!.id!,
+                                    int.parse(selectedWorker));
+                              },
+                              child: const Text('Жаңа жұмысшы қосу'),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Text('dasd');
+                      }
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(20),
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Colors.blue),
@@ -240,6 +465,36 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
               ),
               Column(
                 children: [
+                  Row(
+                    children: [
+                      const Text('Емтиханға берілетін уақыт'),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        width: 100,
+                        child: TextFormField(
+                          controller: examDuration,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Толықтырыңыз';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text('минут'),
+                    ],
+                  ),
                   Row(
                     children: [
                       const Text('Берілетін сұрақтар саны'),
@@ -288,7 +543,9 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // newGroup(widget.group != null ? widget.group!.id.toString() : null);
+                      newGroup(widget.group != null
+                          ? widget.group!.id.toString()
+                          : null);
                     },
                     child: const Text('Өзгертулерді сақтау'),
                   ),
@@ -299,7 +556,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                     onPressed: () {
                       // deleteGroup(widget.group!.id);
                     },
-                    child: const Text('Емтиханды кетіру'),
+                    child: const Text('Емтиханды өшіру'),
                   ),
                 ],
               ),

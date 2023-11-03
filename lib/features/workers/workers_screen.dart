@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omg/constants/styles.dart';
+import 'package:omg/features/worker/worker_screen.dart';
 import 'package:omg/features/workers/workers_cubit.dart';
 import 'package:omg/features/workers/workers_state.dart';
 import 'package:omg/widgets/error_column.dart';
@@ -68,12 +69,12 @@ class WorkersScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => GroupEditScreen(),
-            //   ),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WorkerScreen(),
+              ),
+            );
           },
           foregroundColor: Colors.white,
           backgroundColor: Colors.blue,

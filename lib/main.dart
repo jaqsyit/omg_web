@@ -6,7 +6,9 @@ import 'package:omg/features/login/login_screen.dart';
 import 'package:omg/services/hive_helper.dart';
 import 'package:omg/services/storage_helper.dart';
 
-void main() async{
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(QuestionAdapter());
   runApp(MyApp());
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Коорпоративтік оқу орталығы',
       home: FutureBuilder<String?>(

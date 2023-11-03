@@ -4,12 +4,14 @@ import 'package:omg/constants/styles.dart';
 import 'package:omg/features/group_edit/group_edit_screen.dart';
 import 'package:omg/features/groups/groups_cubit.dart';
 import 'package:omg/features/groups/groups_state.dart';
+import 'package:omg/models/groups_list_data.dart';
 import 'package:omg/widgets/error_column.dart';
 import 'package:omg/widgets/loading_widget.dart';
 import 'package:intl/intl.dart';
 
 class GroupsScreen extends StatelessWidget {
-  const GroupsScreen({Key? key}) : super(key: key);
+  GroupsScreen({Key? key}) : super(key: key);
+  late GroupsListData bufferData;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class GroupsScreen extends StatelessWidget {
               if (state is GroupsLoading) {
                 return const LoadingWidget();
               } else if (state is GroupsLoaded) {
+                bufferData = state.data;
                 return SingleChildScrollView(
                   child: SizedBox(
                     width: double.infinity,
@@ -38,10 +41,11 @@ class GroupsScreen extends StatelessWidget {
                         DataColumn(label: Text('Пән')),
                         DataColumn(label: Text('Тобы')),
                         DataColumn(label: Text('Комиссия')),
+                        DataColumn(label: Text('Жұмысшы')),
                       ],
-                      rows: state.data.data.map((item) {
+                      rows: state.data.data!.map((item) {
                         String examDuration =
-                            '${DateFormat('HH:mm').format(item.start)}-${DateFormat('HH:mm').format(item.end)} ${DateFormat('dd.MM.yyyy').format(item.start)}';
+                            '${DateFormat('HH:mm').format(item.start!)}-${DateFormat('HH:mm').format(item.end!)} ${DateFormat('dd.MM.yyyy').format(item.start!)}';
                         return DataRow(cells: [
                           DataCell(
                             Text(item.id.toString()),
@@ -66,7 +70,7 @@ class GroupsScreen extends StatelessWidget {
                             },
                           ),
                           DataCell(
-                            Text(item.subject),
+                            Text(item.subject!),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -77,7 +81,7 @@ class GroupsScreen extends StatelessWidget {
                             },
                           ),
                           DataCell(
-                            Text(item.chin),
+                            Text(item.chin!),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -88,7 +92,18 @@ class GroupsScreen extends StatelessWidget {
                             },
                           ),
                           DataCell(
-                            Text(item.commission),
+                            Text(item.commission!),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        GroupEditScreen(group: item)),
+                              );
+                            },
+                          ),
+                          DataCell(
+                            Text(item.exam!.length.toString()),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -118,10 +133,20 @@ class GroupsScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            bufferData.data!.first.chin = 'ИТР';
+            bufferData.data!.first.commission = 'Комиссия';
+            bufferData.data!.first.createdAt = DateTime.now();
+            bufferData.data!.first.end = DateTime.now();
+            bufferData.data!.first.id = 0;
+            bufferData.data!.first.passedOn = 0;
+            bufferData.data!.first.quantity = 30;
+            bufferData.data!.first.start = DateTime.now();
+            bufferData.data!.first.updatedAt = DateTime.now();
+            bufferData.data!.first.userId = 1;
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GroupEditScreen(),
+                builder: (context) => GroupEditScreen(group: bufferData.data!.first),
               ),
             );
           },

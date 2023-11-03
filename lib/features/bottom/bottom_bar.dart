@@ -16,7 +16,7 @@ class _MainBarState extends State<MainBar> {
   final tabs = [
     const Placeholder(),
     const WorkersScreen(),
-    const GroupsScreen(),
+    GroupsScreen(),
     const ProfileScreen(),
   ];
 

@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:omg/features/login/login_screen.dart';
+import 'package:omg/main.dart';
 import 'package:omg/services/api_client.dart';
 import 'package:omg/services/json_decoder.dart';
 
@@ -33,21 +36,26 @@ class NetworkHelper {
   }
 
   Future<dynamic> delete({
-  required String url,
-  Map<String, String>? parameters,
-  bool withToken = true,
-}) async {
-  final response = await apiClient.delete(url,parameters: parameters);
-  return _handleResponse(response);
-}
+    required String url,
+    Map<String, String>? parameters,
+    bool withToken = true,
+  }) async {
+    final response = await apiClient.delete(url, parameters: parameters);
+    return _handleResponse(response);
+  }
 
   dynamic _handleResponse(http.Response response) {
     if (response.statusCode == 200) {
       return response;
     } else if (response.statusCode == 401) {
+      navigatorKey.currentState!.pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+        (route) => false,
+      );
       return 'refresh token';
-    } 
-    else {
+    } else {
       final Map<String, dynamic> answerMap =
           JsonDecoder().responseToMap(response);
       if (answerMap.containsKey('message')) {
