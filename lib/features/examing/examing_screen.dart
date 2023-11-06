@@ -7,7 +7,8 @@ import 'package:omg/widgets/error_column.dart';
 import 'package:omg/widgets/loading_widget.dart';
 
 class ExamingScreen extends StatefulWidget {
-  const ExamingScreen({Key? key}) : super(key: key);
+  final String? accessCode;
+  ExamingScreen({Key? key, this.accessCode}) : super(key: key);
 
   @override
   ExamingScreenState createState() => ExamingScreenState();
@@ -19,7 +20,8 @@ class ExamingScreenState extends State<ExamingScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ExamingCubit(context: context)..getExaming(),
+      create: (_) =>
+          ExamingCubit(context: context)..getExaming(widget.accessCode ?? ''),
       child: Scaffold(
         body: SafeArea(
           child: BlocBuilder<ExamingCubit, ExamingState>(
@@ -54,8 +56,10 @@ class ExamingScreenState extends State<ExamingScreen> {
                                         i++)
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          primary: state.selectedOptions?[i] != null &&
-                                                  state.selectedOptions![i]! >= 0
+                                          primary: state.selectedOptions?[i] !=
+                                                      null &&
+                                                  state.selectedOptions![i]! >=
+                                                      0
                                               ? Colors.blue
                                               : Colors.grey,
                                           onPrimary: Colors.white,
@@ -222,7 +226,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                 return ErrorColumn(
                   errMsg: state.errMsg,
                   onRetry: () async {
-                    await examingCubit.getExaming();
+                    await examingCubit.getExaming(widget.accessCode ?? '');
                   },
                 );
               } else {

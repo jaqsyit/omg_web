@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.data == 'kontingent') {
               return const MainBar();
             } else if (snapshot.data == 'examing') {
-              return const ExamingScreen();
+              return ExamingScreen();
             }
             return LoginScreen();
           } else {

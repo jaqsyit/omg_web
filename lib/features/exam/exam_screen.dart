@@ -62,7 +62,8 @@ class ExamScreen extends StatelessWidget {
               const SizedBox(height: 100),
               ElevatedButton(
                 onPressed: () {
-                  ExamCubit(context: context, examData: examData).startExam();
+                  ExamCubit(context: context, examData: examData)
+                      .startExam(examData.exam.accessCode);
                 },
                 child: const Text('БАСТАУ'),
               ),

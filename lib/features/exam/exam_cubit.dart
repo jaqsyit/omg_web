@@ -12,7 +12,7 @@ class ExamCubit extends Cubit<ExamState> {
   ExamCubit({required this.context, required this.examData})
       : super(ExamLoading());
 
-  Future<void> startExam() async {
+  Future<void> startExam(int accessCode) async {
     final timerBox = await Hive.openBox<int>('timerBox');
     int differenceInSeconds =
         examData.exam.group.end.difference(examData.exam.group.start).inSeconds;
@@ -23,7 +23,9 @@ class ExamCubit extends Cubit<ExamState> {
           () => Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => const ExamingScreen(),
+              builder: (context) => ExamingScreen(
+                accessCode: accessCode.toString(),
+              ),
             ),
             (route) => false,
           ),

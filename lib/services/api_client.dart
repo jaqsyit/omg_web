@@ -56,6 +56,7 @@ class ApiClient {
         headers: _buildHeaders(withToken, accessToken),
         body: body ?? jsonBody,
       );
+      print(response.statusCode);
 
       return response;
     } catch (e) {
