@@ -208,7 +208,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                     actions: [
                                       TextButton(
                                         onPressed: () =>
-                                            examingCubit.stopExaming(),
+                                            examingCubit.stopExaming(widget.accessCode.toString()),
                                         child: const Text('OK'),
                                       ),
                                     ],

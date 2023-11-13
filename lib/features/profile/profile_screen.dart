@@ -42,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment:CrossAxisAlignment.start,
                           children: [
                             Text(
                                 '${state.data.surname} ${state.data.name} ${state.data.lastname}'),

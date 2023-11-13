@@ -21,7 +21,7 @@ class ExamingCubit extends Cubit<ExamingState> {
   late Timer _timer;
   int _duration = 0;
 
-  void startTimer() {
+  void startTimer(String accessCode) {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _duration--;
       if (_duration <= 0) {
@@ -34,7 +34,7 @@ class ExamingCubit extends Cubit<ExamingState> {
             content: const Text('Сізге берілген уақыт аяқталды'),
             actions: [
               TextButton(
-                onPressed: () => stopExaming(),
+                onPressed: () => stopExaming(accessCode),
                 child: const Text('OK'),
               ),
             ],
@@ -56,12 +56,12 @@ class ExamingCubit extends Cubit<ExamingState> {
     }
   }
 
-  Future<void> stopExaming() async {
+  Future<void> stopExaming(String accessCode) async {
     _timer.cancel();
 
     int resultOfCheck = await checkAnswers();
 
-    String requestString = await stopExamingRequest(resultOfCheck);
+    String requestString = await stopExamingRequest(resultOfCheck, accessCode);
     if (requestString == '1' || requestString == '0') {
       StorageManager storage = StorageManager();
       await storage.deleteUserStatus();
@@ -115,12 +115,12 @@ class ExamingCubit extends Cubit<ExamingState> {
     return numberOfCorrectAnswers;
   }
 
-  Future<String> stopExamingRequest(int resultOfCheck) async {
+  Future<String> stopExamingRequest(int resultOfCheck, String accessCode) async {
     String _result = '';
     LoadingDialog.show(context);
     final response =
         await NetworkHelper().post(url: END_URL, withToken: false, body: {
-      'accessCode': '744021',
+      'accessCode': accessCode,
       'started_at': '2023-10-20',
       'right_count': resultOfCheck.toString()
     }).whenComplete(() {
@@ -191,7 +191,7 @@ class ExamingCubit extends Cubit<ExamingState> {
 
         emit(ExamingLoaded(data: dataDecoded));
         _duration = await _loadTimeFromHive() ?? _duration;
-        startTimer();
+        startTimer(accessCode!);
       } else if (response is String) {
         emit(ExamingError(errMsg: response));
       } else {
@@ -218,7 +218,7 @@ class ExamingCubit extends Cubit<ExamingState> {
       emit(ExamingLoaded(
           data: loadedData, selectedOptions: loadedSelectedOptions));
       _duration = await _loadTimeFromHive() ?? _duration;
-      startTimer();
+      startTimer(accessCode!);
     }
   }
 

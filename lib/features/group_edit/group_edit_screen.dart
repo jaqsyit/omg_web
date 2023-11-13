@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +16,7 @@ import 'package:omg/services/json_decoder.dart';
 import 'package:omg/services/network_helper.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GroupEditScreen extends StatefulWidget {
   final Datum? group;
@@ -173,6 +179,34 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
     }
   }
 
+  Future<void> getAccessCode(int idGroup) async {
+    final response =
+        await NetworkHelper().get(url: ACCESS_CODES_URL, parameters: {
+      'id': idGroup.toString(),
+    });
+
+    if (response is Response) {
+      final body = json.decode(response.body);
+
+      if (body['success'] != null) {
+        final String fileUrl = body['success'];
+        print(fileUrl);
+
+        if (kIsWeb) {
+          html.window.open(fileUrl, '_blank');
+        } else {
+          if (await canLaunch(fileUrl)) {
+            await launch(fileUrl);
+          } else {
+            throw 'Could not launch $fileUrl';
+          }
+        }
+      }
+    } else {
+      print('Failed to get access code');
+    }
+  }
+
   Future<workers.WorkersListData?> getWorkers() async {
     final response = await NetworkHelper().get(url: WORKERS_URL);
 
@@ -188,6 +222,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
     } else {
       print('object');
     }
+    return null;
   }
 
   @override
@@ -264,6 +299,19 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                     },
                     icon: const Icon(Icons.arrow_drop_down),
                   ),
+                  const SizedBox(width: 30),
+                  ElevatedButton(
+                    onPressed: () {
+                      getAccessCode(widget.group!.id!);
+                    },
+                    child: const Row(
+                      children: [
+                        Text('Емтихан кодын алу'),
+                        SizedBox(width: 5),
+                        Icon(Icons.download),
+                      ],
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 20),

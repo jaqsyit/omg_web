@@ -16,45 +16,49 @@ class _MainBarState extends State<MainBar> {
   final tabs = [
     const Placeholder(),
     const WorkersScreen(),
-    GroupsScreen(),
+    const GroupsScreen(),
     const ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.pink,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        // ignore: prefer_const_literals_to_create_immutables
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Статистика',
+      backgroundColor: Colors.white,
+      body: Row(
+        children: [
+          NavigationRail(
+            selectedIndex: _selectedIndex,
+            onDestinationSelected: (int index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            labelType: NavigationRailLabelType.all,
+            destinations: const [
+              NavigationRailDestination(
+                icon: Icon(Icons.bar_chart),
+                label: Text('Статистика'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.groups),
+                label: Text('Жұмысшылар'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.library_books_outlined),
+                label: Text('Емтихандар'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.person),
+                label: Text('Профиль'),
+              ),
+            ],
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.groups),
-            label: 'Жұмысшылар',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.library_books_outlined),
-            label: 'Емтихандар',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Профиль',
+          const VerticalDivider(thickness: 1, width: 1),
+          Expanded(
+            child: tabs[_selectedIndex],
           )
         ],
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
       ),
-      body: tabs[_selectedIndex],
     );
   }
 }

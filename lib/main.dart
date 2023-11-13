@@ -9,6 +9,7 @@ import 'package:omg/services/storage_helper.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(QuestionAdapter());
   runApp(MyApp());

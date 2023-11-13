@@ -9,8 +9,14 @@ import 'package:omg/widgets/error_column.dart';
 import 'package:omg/widgets/loading_widget.dart';
 import 'package:intl/intl.dart';
 
-class GroupsScreen extends StatelessWidget {
-  GroupsScreen({Key? key}) : super(key: key);
+class GroupsScreen extends StatefulWidget {
+  const GroupsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<GroupsScreen> createState() => _GroupsScreenState();
+}
+
+class _GroupsScreenState extends State<GroupsScreen> {
   late GroupsListData bufferData;
 
   @override
