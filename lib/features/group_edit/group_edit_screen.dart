@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'dart:html' as html;
 import 'package:flutter/foundation.dart';
@@ -352,15 +351,25 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                     DataColumn(label: Text('Нәтиже')),
                   ],
                   rows: widget.group!.exam!.map((item) {
+                    String formattedDate = '';
+                    if (item.updatedAt != null) {
+                      DateTime dateTime = DateTime.parse(item.updatedAt);
+                      formattedDate = DateFormat('yyyy-MM-dd kk:mm')
+                          .format(dateTime.toLocal());
+                    }
                     return DataRow(
                       cells: [
                         DataCell(Text(item.id.toString())),
                         DataCell(Text(
                             '${item.workers!.surname} ${item.workers!.name}')),
                         DataCell(Text(item.workers!.org!.nameKk ?? '')),
-                        DataCell(Text(item.updatedAt ?? '')),
+                        DataCell(Text(formattedDate)),
                         DataCell(Text(
-                          item.pass == 1 ? 'Өтті' : 'Құлады',
+                          formattedDate != ''
+                              ? item.pass == 1
+                                  ? 'Өтті'
+                                  : 'Құлады'
+                              : '',
                           style: TextStyle(
                               color: item.pass == 1 ? Colors.blue : Colors.red),
                         )),
