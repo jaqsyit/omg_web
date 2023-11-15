@@ -14,7 +14,9 @@ class ApiClient {
     bool withToken = true,
   }) async {
     final storage = StorageManager();
-    String requestURL = parameters != null ? '$MID_URL$url/${parameters?['id']}' : '$MID_URL$url';
+    String requestURL = parameters != null
+        ? '$MID_URL$url/${parameters['id']}'
+        : '$MID_URL$url';
 
     String? accessToken;
 

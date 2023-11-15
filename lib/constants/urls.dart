@@ -14,3 +14,4 @@ const String WORKERS_URL = '/workers';
 const String EXAM_URL = '/exam';
 const String ACCESS_CODES_URL = '/access-codes';
 const String RESULT_EXAM_URL = '/results/download/exam';
+const String ORGS_URL = '/orgs';

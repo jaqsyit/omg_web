@@ -4,6 +4,7 @@ import 'package:omg/features/worker/worker_cubit.dart';
 import 'package:omg/features/worker/worker_state.dart';
 import 'package:omg/widgets/error_column.dart';
 import 'package:omg/widgets/loading_widget.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class WorkerScreen extends StatefulWidget {
   WorkerScreen({Key? key}) : super(key: key);
@@ -16,12 +17,23 @@ class _WorkerScreenState extends State<WorkerScreen> {
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController lastnameController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController workNameController = TextEditingController();
+
+  String newSubject = '';
 
   @override
   Widget build(BuildContext context) {
+    final maskFormatter = MaskTextInputFormatter(
+      mask: '+7 (###) ### ## ##',
+      filter: {"#": RegExp(r'[0-9]')},
+    );
     return BlocProvider(
-      create: (_) => WorkerCubit(context: context)..loadedState(),
+      create: (_) => WorkerCubit(context: context)..getOrgsList(),
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Жұмысшы қосу'),
+        ),
         body: SafeArea(
           child: BlocBuilder<WorkerCubit, WorkerState>(
             builder: (context, state) {
@@ -41,6 +53,78 @@ class _WorkerScreenState extends State<WorkerScreen> {
                         ],
                       ),
                       const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            margin: const EdgeInsets.all(20),
+                            child: DropdownButton<String>(
+                              elevation: 0,
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              value: newSubject != ''
+                                  ? newSubject
+                                  : '${state.data.data[0].id}',
+                              items: state.data.data.map((item) {
+                                return DropdownMenuItem(
+                                  value: "${item.id}",
+                                  child: Text(item.nameKk),
+                                );
+                              }).toList(),
+                              hint: const Text(
+                                'Тобы',
+                              ),
+                              onChanged: (value) async {
+                                setState(() {
+                                  newSubject = value!;
+                                });
+                              },
+                              icon: const Icon(Icons.arrow_drop_down),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: TextFormField(
+                                keyboardType: TextInputType.phone,
+                                controller: phoneNumberController,
+                                inputFormatters: [maskFormatter],
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '+7 (777) 777 77 77',
+                                ),
+                                maxLines: 1,
+                                validator: (text) {
+                                  if (text != null) {
+                                    if (text.isEmpty) {
+                                      return 'Телефон номеріңізді еңгізіңіз';
+                                    } else if (text.length < 12) {
+                                      return 'Телефон номеріңіз толық емес';
+                                    }
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ),
+                          _buildTextField(workNameController, 'Жұмысы'),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                          onPressed: () {
+                            WorkerCubit(context: context).addNewWorker(
+                                name: nameController.text,
+                                surname: surnameController.text,
+                                lastname: lastnameController.text,
+                                phoneNumber: phoneNumberController.text,
+                                work: workNameController.text,
+                                idOrg: newSubject);
+                          },
+                          child: const Text('Қосу'))
                     ],
                   ),
                 );
@@ -48,7 +132,7 @@ class _WorkerScreenState extends State<WorkerScreen> {
                 return ErrorColumn(
                   errMsg: state.errMsg,
                   onRetry: () async {
-                    // await profileCubit.loadedState();
+                    await profileCubit.getOrgsList();
                   },
                 );
               } else {
@@ -66,21 +150,18 @@ class _WorkerScreenState extends State<WorkerScreen> {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: TextFormField(
+          keyboardType: TextInputType.phone,
           controller: controller,
           decoration: InputDecoration(
-            labelText: label,
-            fillColor: Colors.white,
-            filled: true,
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide.none,
-            ),
+            border: OutlineInputBorder(),
+            hintText: label,
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Толықтырыңыз';
+          maxLines: 1,
+          validator: (text) {
+            if (text != null) {
+              if (text.isEmpty) {
+                return 'Толықтырыңыз';
+              }
             }
             return null;
           },
