@@ -206,6 +206,34 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
     }
   }
 
+  Future<void> getResultExam(int idExam) async {
+    final response =
+        await NetworkHelper().get(url: RESULT_EXAM_URL, parameters: {
+      'id': idExam.toString(),
+    });
+
+    if (response is Response) {
+      final body = json.decode(response.body);
+
+      if (body['success'] != null) {
+        final String fileUrl = body['success'];
+        print(fileUrl);
+
+        if (kIsWeb) {
+          html.window.open(fileUrl, '_blank');
+        } else {
+          if (await canLaunch(fileUrl)) {
+            await launch(fileUrl);
+          } else {
+            throw 'Could not launch $fileUrl';
+          }
+        }
+      }
+    } else {
+      print('Failed to get result of exam');
+    }
+  }
+
   Future<workers.WorkersListData?> getWorkers() async {
     final response = await NetworkHelper().get(url: WORKERS_URL);
 
@@ -364,15 +392,27 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                             '${item.workers!.surname} ${item.workers!.name}')),
                         DataCell(Text(item.workers!.org!.nameKk ?? '')),
                         DataCell(Text(formattedDate)),
-                        DataCell(Text(
-                          formattedDate != ''
-                              ? item.pass == 1
-                                  ? 'Өтті'
-                                  : 'Құлады'
-                              : '',
-                          style: TextStyle(
-                              color: item.pass == 1 ? Colors.blue : Colors.red),
-                        )),
+                        DataCell(
+                          Row(
+                            children: [
+                              Text(
+                                formattedDate != ''
+                                    ? item.pass == 1
+                                        ? 'Өтті'
+                                        : 'Құлады'
+                                    : '',
+                                style: TextStyle(
+                                    color: item.pass == 1
+                                        ? Colors.blue
+                                        : Colors.red),
+                              ),
+                              const Icon(Icons.download),
+                            ],
+                          ),
+                          onTap: () {
+                            getResultExam(item.id!);
+                          },
+                        ),
                       ],
                     );
                   }).toList(),

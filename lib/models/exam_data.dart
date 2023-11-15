@@ -34,8 +34,8 @@ class Exam {
     int workerId;
     int accessCode;
     int pass;
-    DateTime createdAt;
-    DateTime updatedAt;
+    dynamic createdAt;
+    dynamic updatedAt;
     Group group;
     Workers workers;
 
@@ -57,8 +57,8 @@ class Exam {
         workerId: json["worker_id"],
         accessCode: json["access_code"],
         pass: json["pass"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
         group: Group.fromJson(json["group"]),
         workers: Workers.fromJson(json["workers"]),
     );
@@ -69,8 +69,8 @@ class Exam {
         "worker_id": workerId,
         "access_code": accessCode,
         "pass": pass,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
+        "created_at": createdAt,
+        "updated_at": updatedAt,
         "group": group.toJson(),
         "workers": workers.toJson(),
     };
@@ -84,6 +84,8 @@ class Group {
     String subject;
     String chin;
     String commission;
+    int quantity;
+    int passedOn;
     dynamic createdAt;
     dynamic updatedAt;
 
@@ -95,6 +97,8 @@ class Group {
         required this.subject,
         required this.chin,
         required this.commission,
+        required this.quantity,
+        required this.passedOn,
         required this.createdAt,
         required this.updatedAt,
     });
@@ -107,6 +111,8 @@ class Group {
         subject: json["subject"],
         chin: json["chin"],
         commission: json["commission"],
+        quantity: json["quantity"],
+        passedOn: json["passed_on"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
     );
@@ -119,6 +125,8 @@ class Group {
         "subject": subject,
         "chin": chin,
         "commission": commission,
+        "quantity": quantity,
+        "passed_on": passedOn,
         "created_at": createdAt,
         "updated_at": updatedAt,
     };
