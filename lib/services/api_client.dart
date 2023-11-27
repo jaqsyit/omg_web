@@ -51,6 +51,7 @@ class ApiClient {
     if (withToken) {
       accessToken = await storage.getAccessToken();
     }
+    print(body);
 
     try {
       final response = await http.post(

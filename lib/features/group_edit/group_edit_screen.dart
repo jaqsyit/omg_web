@@ -90,7 +90,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
         newStart.add(Duration(minutes: int.parse(examDuration.text)));
 
     final response = await NetworkHelper().post(url: GROUPS_URL, body: {
-      'idGroup': idGroup != '' ? idGroup : null,
+      'idGroup': idGroup != '' ? idGroup : '-1',
       'start': newStart.toString(),
       'end': newEnd.toString(),
       'subject': newSubject,
@@ -363,61 +363,62 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: DataTable(
-                  headingRowColor: MaterialStateProperty.all(Colors.blue),
-                  headingTextStyle: CustomTextStyles.s16w400cw,
-                  columns: const [
-                    DataColumn(
-                      label: Text('№'),
-                      numeric: true,
-                    ),
-                    DataColumn(label: Text('ФИО')),
-                    DataColumn(label: Text('Мекеме')),
-                    DataColumn(label: Text('Емтихан тапсырылды')),
-                    DataColumn(label: Text('Нәтиже')),
-                  ],
-                  rows: widget.group!.exam!.map((item) {
-                    String formattedDate = '';
-                    if (item.updatedAt != null) {
-                      DateTime dateTime = DateTime.parse(item.updatedAt);
-                      formattedDate = DateFormat('yyyy-MM-dd kk:mm')
-                          .format(dateTime.toLocal());
-                    }
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(item.id.toString())),
-                        DataCell(Text(
-                            '${item.workers!.surname} ${item.workers!.name}')),
-                        DataCell(Text(item.workers!.org!.nameKk ?? '')),
-                        DataCell(Text(formattedDate)),
-                        DataCell(
-                          Row(
-                            children: [
-                              Text(
-                                formattedDate != ''
-                                    ? item.pass == 1
-                                        ? 'Өтті'
-                                        : 'Құлады'
-                                    : '',
-                                style: TextStyle(
-                                    color: item.pass == 1
-                                        ? Colors.blue
-                                        : Colors.red),
-                              ),
-                              const Icon(Icons.download),
-                            ],
+              if (widget.group?.exam != null)
+                SizedBox(
+                  width: double.infinity,
+                  child: DataTable(
+                    headingRowColor: MaterialStateProperty.all(Colors.blue),
+                    headingTextStyle: CustomTextStyles.s16w400cw,
+                    columns: const [
+                      DataColumn(
+                        label: Text('№'),
+                        numeric: true,
+                      ),
+                      DataColumn(label: Text('ФИО')),
+                      DataColumn(label: Text('Мекеме')),
+                      DataColumn(label: Text('Емтихан тапсырылды')),
+                      DataColumn(label: Text('Нәтиже')),
+                    ],
+                    rows: widget.group!.exam!.map((item) {
+                      String formattedDate = '';
+                      if (item.updatedAt != null) {
+                        DateTime dateTime = DateTime.parse(item.updatedAt);
+                        formattedDate = DateFormat('yyyy-MM-dd kk:mm')
+                            .format(dateTime.toLocal());
+                      }
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(item.id.toString())),
+                          DataCell(Text(
+                              '${item.workers!.surname} ${item.workers!.name}')),
+                          DataCell(Text(item.workers!.org!.nameKk ?? '')),
+                          DataCell(Text(formattedDate)),
+                          DataCell(
+                            Row(
+                              children: [
+                                Text(
+                                  formattedDate != ''
+                                      ? item.pass == 1
+                                          ? 'Өтті'
+                                          : 'Құлады'
+                                      : '',
+                                  style: TextStyle(
+                                      color: item.pass == 1
+                                          ? Colors.blue
+                                          : Colors.red),
+                                ),
+                                const Icon(Icons.download),
+                              ],
+                            ),
+                            onTap: () {
+                              getResultExam(item.id!);
+                            },
                           ),
-                          onTap: () {
-                            getResultExam(item.id!);
-                          },
-                        ),
-                      ],
-                    );
-                  }).toList(),
+                        ],
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 20),
                 child: FutureBuilder(
@@ -640,9 +641,9 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      newGroup(widget.group != null
+                      newGroup(widget.group?.id != null
                           ? widget.group!.id.toString()
-                          : null);
+                          : '');
                     },
                     child: const Text('Өзгертулерді сақтау'),
                   ),

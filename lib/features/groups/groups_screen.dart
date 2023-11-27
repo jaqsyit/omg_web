@@ -143,12 +143,13 @@ class _GroupsScreenState extends State<GroupsScreen> {
             bufferData.data!.first.commission = 'Комиссия';
             bufferData.data!.first.createdAt = DateTime.now();
             bufferData.data!.first.end = DateTime.now();
-            bufferData.data!.first.id = 0;
+            bufferData.data!.first.id = null;
             bufferData.data!.first.passedOn = 0;
             bufferData.data!.first.quantity = 30;
             bufferData.data!.first.start = DateTime.now();
             bufferData.data!.first.updatedAt = DateTime.now();
             bufferData.data!.first.userId = 1;
+            bufferData.data!.first.exam = null;
             Navigator.push(
               context,
               MaterialPageRoute(
