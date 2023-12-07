@@ -2,6 +2,7 @@
 
 const String BASE_URL = 'omg-koo.kz';
 // const String BASE_URL = '127.0.0.1:8000';
+// const String BASE_URL = '192.168.31.109:8050';
 const String MID_URL = '/api/v1';
 
 const String LOGIN_URL = '/login';

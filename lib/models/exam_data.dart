@@ -34,8 +34,8 @@ class Exam {
     int workerId;
     int accessCode;
     int pass;
-    dynamic createdAt;
-    dynamic updatedAt;
+    DateTime createdAt;
+    DateTime updatedAt;
     Group group;
     Workers workers;
 
@@ -57,8 +57,8 @@ class Exam {
         workerId: json["worker_id"],
         accessCode: json["access_code"],
         pass: json["pass"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
         group: Group.fromJson(json["group"]),
         workers: Workers.fromJson(json["workers"]),
     );
@@ -69,8 +69,8 @@ class Exam {
         "worker_id": workerId,
         "access_code": accessCode,
         "pass": pass,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
         "group": group.toJson(),
         "workers": workers.toJson(),
     };
@@ -86,8 +86,8 @@ class Group {
     String commission;
     int quantity;
     int passedOn;
-    dynamic createdAt;
-    dynamic updatedAt;
+    DateTime createdAt;
+    DateTime updatedAt;
 
     Group({
         required this.id,
@@ -113,8 +113,8 @@ class Group {
         commission: json["commission"],
         quantity: json["quantity"],
         passedOn: json["passed_on"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -127,8 +127,8 @@ class Group {
         "commission": commission,
         "quantity": quantity,
         "passed_on": passedOn,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
     };
 }
 
@@ -136,7 +136,7 @@ class Workers {
     int id;
     String surname;
     String name;
-    String lastname;
+    dynamic lastname;
     int orgId;
     dynamic phone;
     String job;

@@ -139,21 +139,42 @@ class _GroupsScreenState extends State<GroupsScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            bufferData.data!.first.chin = 'ИТР';
-            bufferData.data!.first.commission = 'Комиссия';
-            bufferData.data!.first.createdAt = DateTime.now();
-            bufferData.data!.first.end = DateTime.now();
-            bufferData.data!.first.id = null;
-            bufferData.data!.first.passedOn = 0;
-            bufferData.data!.first.quantity = 30;
-            bufferData.data!.first.start = DateTime.now();
-            bufferData.data!.first.updatedAt = DateTime.now();
-            bufferData.data!.first.userId = 1;
-            bufferData.data!.first.exam = null;
+            if (bufferData.data != null && bufferData.data!.isNotEmpty) {
+              bufferData.data!.first.chin = 'ИТР';
+              bufferData.data!.first.commission = 'Комиссия';
+              bufferData.data!.first.createdAt = DateTime.now();
+              bufferData.data!.first.end = DateTime.now();
+              bufferData.data!.first.id = null;
+              bufferData.data!.first.passedOn = 0;
+              bufferData.data!.first.quantity = 30;
+              bufferData.data!.first.start = DateTime.now();
+              bufferData.data!.first.updatedAt = DateTime.now();
+              bufferData.data!.first.userId = 1;
+              bufferData.data!.first.exam = [];
+            } else {
+              final newData = Datum(
+                chin: 'ИТР',
+                commission: 'Комиссия',
+                subject: 'Өрт-техникалық минимум',
+                createdAt: DateTime.now(),
+                end: DateTime.now(),
+                id: null,
+                passedOn: 0,
+                quantity: 30,
+                start: DateTime.now(),
+                updatedAt: DateTime.now(),
+                userId: 1,
+                exam: [],
+              );
+
+              bufferData.data = [newData];
+            }
+
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GroupEditScreen(group: bufferData.data!.first),
+                builder: (context) =>
+                    GroupEditScreen(group: bufferData.data!.first),
               ),
             );
           },

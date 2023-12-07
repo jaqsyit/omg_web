@@ -19,7 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class GroupEditScreen extends StatefulWidget {
   final Datum? group;
-  GroupEditScreen({Key? key, this.group}) : super(key: key);
+  const GroupEditScreen({Key? key, this.group}) : super(key: key);
 
   @override
   State<GroupEditScreen> createState() => _GroupEditScreenState();
