@@ -44,3 +44,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+//    scp -R C:\dev\omg\build\web\* ubuntu@omg-koo.kz:/var/www/html/public

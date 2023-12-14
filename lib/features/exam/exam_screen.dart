@@ -4,6 +4,7 @@ import 'package:omg/constants/styles.dart';
 import 'package:omg/features/exam/exam_cubit.dart';
 import 'package:omg/models/exam_data.dart';
 import 'package:intl/intl.dart';
+import 'package:omg/services/storage_helper.dart';
 
 class ExamScreen extends StatelessWidget {
   final ExamData examData;
@@ -61,9 +62,16 @@ class ExamScreen extends StatelessWidget {
               const Text('Ескертулер'),
               const SizedBox(height: 100),
               ElevatedButton(
-                onPressed: () {
-                  ExamCubit(context: context, examData: examData)
-                      .startExam(examData.exam.accessCode);
+                onPressed: () async {
+                  StorageManager storage = StorageManager();
+                  await storage
+                      .setAccessCode(examData.exam.accessCode.toString())
+                      .whenComplete(
+                    () {
+                      ExamCubit(context: context, examData: examData)
+                          .startExam(examData.exam.accessCode);
+                    },
+                  );
                 },
                 child: const Text('БАСТАУ'),
               ),

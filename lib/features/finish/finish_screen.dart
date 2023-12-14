@@ -1,35 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:omg/constants/styles.dart';
-import 'package:omg/features/examing/examing_cubit.dart';
-import 'package:omg/features/examing/examing_state.dart';
+import 'package:omg/features/finish/finish_cubit.dart';
+import 'package:omg/features/finish/finish_state.dart';
+import 'package:omg/models/examing_data.dart';
 import 'package:omg/widgets/error_column.dart';
 import 'package:omg/widgets/loading_widget.dart';
 
-class ExamingScreen extends StatefulWidget {
+class FinishScreen extends StatefulWidget {
   final String? accessCode;
-  ExamingScreen({Key? key, this.accessCode}) : super(key: key);
+  final ExamingData? examingData;
+  final Map<int, int>? selectedOptions;
+  FinishScreen(
+      {Key? key, this.accessCode, this.examingData, this.selectedOptions})
+      : super(key: key);
 
   @override
-  ExamingScreenState createState() => ExamingScreenState();
+  FinishScreenState createState() => FinishScreenState();
 }
 
-class ExamingScreenState extends State<ExamingScreen> {
+class FinishScreenState extends State<FinishScreen> {
   List<List<String>> answers = [];
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          ExamingCubit(context: context)..getExaming(widget.accessCode ?? ''),
+      create: (_) => FinishCubit(context: context)
+        ..getFinish(widget.accessCode ?? '', widget.examingData,
+            widget.selectedOptions),
       child: Scaffold(
         body: SafeArea(
-          child: BlocBuilder<ExamingCubit, ExamingState>(
+          child: BlocBuilder<FinishCubit, FinishState>(
             builder: (context, state) {
-              final examingCubit = BlocProvider.of<ExamingCubit>(context);
-              if (state is ExamingLoading) {
+              final finishCubit = BlocProvider.of<FinishCubit>(context);
+              if (state is FinishLoading) {
                 return const LoadingWidget();
-              } else if (state is ExamingLoaded) {
+              } else if (state is FinishLoaded) {
                 int questionIndex = state.currentIndex ?? 0;
                 bool isFirstQuestion = questionIndex == 0;
                 bool isLastQuestion =
@@ -60,8 +66,12 @@ class ExamingScreenState extends State<ExamingScreen> {
                                                       null &&
                                                   state.selectedOptions![i]! >=
                                                       0
-                                              ? Colors.blue
-                                              : Colors.grey,
+                                              ? state.selectedOptions![i] ==
+                                                      state.data!.questions[i]
+                                                          .correctOption
+                                                  ? Colors.blue
+                                                  : Colors.red
+                                              : Colors.red,
                                           onPrimary: Colors.white,
                                           side: BorderSide(
                                             color: i == questionIndex
@@ -71,7 +81,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          examingCubit.goToQuestion(i);
+                                          finishCubit.goToQuestion(i);
                                         },
                                         child: Text((i + 1).toString()),
                                       ),
@@ -90,7 +100,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                     ),
                                     Text(
                                       state.data!.questions[questionIndex]
-                                          .question, // Use questionIndex here
+                                          .question,
                                       style: CustomTextStyles.questionTextStyle,
                                     ),
                                     const SizedBox(height: 16.0),
@@ -107,28 +117,60 @@ class ExamingScreenState extends State<ExamingScreen> {
                                               .data!
                                               .questions[questionIndex]
                                               .options[i];
-                                          return ListTile(
-                                            title: Text(
-                                              answerText,
-                                              style: CustomTextStyles
-                                                  .optionTextStyle,
-                                            ),
-                                            leading: Radio(
-                                              value: i,
-                                              groupValue: state
-                                                          .selectedOptions !=
-                                                      null
-                                                  ? state.selectedOptions!
-                                                          .containsKey(
-                                                              questionIndex)
-                                                      ? state.selectedOptions![
-                                                          questionIndex]
-                                                      : null
-                                                  : null,
-                                              onChanged: (int? value) {
-                                                examingCubit.selectOption(
-                                                    value!, questionIndex);
-                                              },
+                                          bool isSelected =
+                                              state.selectedOptions?[
+                                                      questionIndex] ==
+                                                  i;
+                                          bool isCorrect = state
+                                                  .data!
+                                                  .questions[questionIndex]
+                                                  .correctOption ==
+                                              i;
+                                          bool isIncorrectSelection = state
+                                                          .selectedOptions?[
+                                                      questionIndex] !=
+                                                  null &&
+                                              state
+                                                      .data!
+                                                      .questions[questionIndex]
+                                                      .correctOption !=
+                                                  state.selectedOptions![
+                                                      questionIndex];
+                                          Color containerColor;
+                                          if (isSelected && isCorrect) {
+                                            containerColor = Colors.blue;
+                                          } else if (isSelected && !isCorrect) {
+                                            containerColor = Colors.red;
+                                          } else if (isCorrect &&
+                                              isIncorrectSelection) {
+                                            containerColor = Colors.blue;
+                                          } else {
+                                            containerColor = Colors.transparent;
+                                          }
+                                          return Container(
+                                            color: containerColor,
+                                            child: ListTile(
+                                              title: Text(
+                                                answerText,
+                                                style: CustomTextStyles
+                                                    .optionTextStyle,
+                                              ),
+                                              leading: Radio(
+                                                value:
+                                                    state.selectedOptions?[i] ??
+                                                        i,
+                                                groupValue: state
+                                                            .selectedOptions !=
+                                                        null
+                                                    ? state.selectedOptions!
+                                                            .containsKey(
+                                                                questionIndex)
+                                                        ? state.selectedOptions![
+                                                            questionIndex]
+                                                        : null
+                                                    : null,
+                                                onChanged: (int? value) {},
+                                              ),
                                             ),
                                           );
                                         },
@@ -157,7 +199,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                 ),
                                 onPressed: () {
                                   questionIndex--;
-                                  examingCubit.goToQuestion(questionIndex);
+                                  finishCubit.goToQuestion(questionIndex);
                                 },
                                 child: const Text(
                                   'Артқа',
@@ -174,7 +216,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                 ),
                                 onPressed: () {
                                   questionIndex++;
-                                  examingCubit.goToQuestion(questionIndex);
+                                  finishCubit.goToQuestion(questionIndex);
                                 },
                                 child: const Text(
                                   'Келесі',
@@ -195,7 +237,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                     MaterialStatePropertyAll<Color>(Colors.red),
                               ),
                               child: const Text(
-                                'Аяқтау',
+                                'Келісемін',
                                 style: CustomTextStyles.questionTextStyle,
                               ),
                               onPressed: () {
@@ -207,9 +249,10 @@ class ExamingScreenState extends State<ExamingScreen> {
                                         'Емтиханды аяқтау үшін ОК басыңыз'),
                                     actions: [
                                       TextButton(
-                                        onPressed: () =>
-                                            examingCubit.stopExaming(state.data,
-                                                state.selectedOptions, widget.accessCode),
+                                        onPressed: () async {
+                                          await finishCubit
+                                              .stopFinish(widget.accessCode ?? '');
+                                        },
                                         child: const Text('OK'),
                                       ),
                                     ],
@@ -223,11 +266,11 @@ class ExamingScreenState extends State<ExamingScreen> {
                     ],
                   ),
                 );
-              } else if (state is ExamingError) {
+              } else if (state is FinishError) {
                 return ErrorColumn(
                   errMsg: state.errMsg,
                   onRetry: () async {
-                    await examingCubit.getExaming(widget.accessCode ?? '');
+                    await finishCubit.getFinish(widget.accessCode ?? '');
                   },
                 );
               } else {

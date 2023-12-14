@@ -6,12 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:omg/constants/urls.dart';
 import 'package:omg/features/examing/examing_state.dart';
-import 'package:omg/features/login/login_screen.dart';
+import 'package:omg/features/finish/finish_screen.dart';
 import 'package:omg/models/end_data.dart';
 import 'package:omg/models/examing_data.dart';
 import 'package:omg/services/json_decoder.dart';
 import 'package:omg/services/network_helper.dart';
-import 'package:omg/services/storage_helper.dart';
 import 'package:omg/widgets/loading_dialog.dart';
 
 class ExamingCubit extends Cubit<ExamingState> {
@@ -21,11 +20,13 @@ class ExamingCubit extends Cubit<ExamingState> {
   late Timer _timer;
   int _duration = 0;
 
-  void startTimer(String accessCode) {
+  void startTimer(String accessCode, [ExamingData? examingData]) {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _duration--;
       if (_duration <= 0) {
         _timer.cancel();
+        ExamingLoaded currentState = state as ExamingLoaded;
+        Map<int, int>? selectedOptions = currentState.selectedOptions;
         showDialog(
           barrierDismissible: false,
           context: context,
@@ -34,7 +35,7 @@ class ExamingCubit extends Cubit<ExamingState> {
             content: const Text('Сізге берілген уақыт аяқталды'),
             actions: [
               TextButton(
-                onPressed: () => stopExaming(accessCode),
+                onPressed: () => stopExaming(examingData, selectedOptions),
                 child: const Text('OK'),
               ),
             ],
@@ -56,66 +57,82 @@ class ExamingCubit extends Cubit<ExamingState> {
     }
   }
 
-  Future<void> stopExaming(String accessCode) async {
-    _timer.cancel();
-
-    int resultOfCheck = await checkAnswers();
-
-    String requestString = await stopExamingRequest(resultOfCheck, accessCode);
-    if (requestString == '1' || requestString == '0') {
-      StorageManager storage = StorageManager();
-      await storage.deleteUserStatus();
-      await Hive.close();
-      await Hive.deleteBoxFromDisk('questionsBox');
-      await Hive.deleteBoxFromDisk('optionsBox');
-      await Hive.deleteBoxFromDisk('correctOptionBox');
-      await Hive.deleteBoxFromDisk('selectedOptionsBox');
-      await Hive.deleteBoxFromDisk('timerBox').whenComplete(
-        () => showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Емтихан аяқталды'),
-            content: Text(
-              'Сіз емтиханнан ${requestString == '1' ? 'өттіңіз' : 'құладыңыз'}',
-              style: TextStyle(
-                color: requestString == '1' ? Colors.green : Colors.red,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ),
-                  (route) => false,
-                ),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+  void stopExaming(
+      [ExamingData? examingData,
+      Map<int, int>? selectedOptions,
+      String? accessCode]) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => FinishScreen(
+                examingData: examingData,
+                selectedOptions: selectedOptions,
+                accessCode: accessCode,
+              )),
+    );
   }
 
-  Future<int> checkAnswers() async {
-    Box<int> selectedOptionsBox = await Hive.openBox<int>('selectedOptionsBox');
-    Box<int> correctOptionBox = await Hive.openBox<int>('correctOptionBox');
+  // Future<void> stopExaming(String accessCode) async {
+  //   _timer.cancel();
 
-    int numberOfCorrectAnswers = 0;
+  //   int resultOfCheck = await checkAnswers();
 
-    for (var key in selectedOptionsBox.keys) {
-      if (selectedOptionsBox.get(key) == correctOptionBox.get(key)) {
-        numberOfCorrectAnswers++;
-      }
-    }
+  //   String requestString = await stopExamingRequest(resultOfCheck, accessCode);
+  //   if (requestString == '1' || requestString == '0') {
+  //     StorageManager storage = StorageManager();
+  //     await storage.deleteUserStatus();
+  //     await Hive.close();
+  //     await Hive.deleteBoxFromDisk('questionsBox');
+  //     await Hive.deleteBoxFromDisk('optionsBox');
+  //     await Hive.deleteBoxFromDisk('correctOptionBox');
+  //     await Hive.deleteBoxFromDisk('selectedOptionsBox');
+  //     await Hive.deleteBoxFromDisk('timerBox').whenComplete(
+  //       () => showDialog(
+  //         barrierDismissible: false,
+  //         context: context,
+  //         builder: (context) => AlertDialog(
+  //           title: const Text('Емтихан аяқталды'),
+  //           content: Text(
+  //             'Сіз емтиханнан ${requestString == '1' ? 'өттіңіз' : 'құладыңыз'}',
+  //             style: TextStyle(
+  //               color: requestString == '1' ? Colors.green : Colors.red,
+  //             ),
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pushAndRemoveUntil(
+  //                 context,
+  //                 MaterialPageRoute(
+  //                   builder: (context) => LoginScreen(),
+  //                 ),
+  //                 (route) => false,
+  //               ),
+  //               child: const Text('OK'),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 
-    return numberOfCorrectAnswers;
-  }
+  // Future<int> checkAnswers() async {
+  //   Box<int> selectedOptionsBox = await Hive.openBox<int>('selectedOptionsBox');
+  //   Box<int> correctOptionBox = await Hive.openBox<int>('correctOptionBox');
 
-  Future<String> stopExamingRequest(int resultOfCheck, String accessCode) async {
+  //   int numberOfCorrectAnswers = 0;
+
+  //   for (var key in selectedOptionsBox.keys) {
+  //     if (selectedOptionsBox.get(key) == correctOptionBox.get(key)) {
+  //       numberOfCorrectAnswers++;
+  //     }
+  //   }
+
+  //   return numberOfCorrectAnswers;
+  // }
+
+  Future<String> stopExamingRequest(
+      int resultOfCheck, String accessCode) async {
     String _result = '';
     LoadingDialog.show(context);
     final response =

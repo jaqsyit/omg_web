@@ -7,12 +7,20 @@ class StorageManager {
     return storage.read(key: 'access_token');
   }
 
+  Future<String?> getAccessCode() async {
+    return storage.read(key: 'access_code');
+  }
+
    Future<String?> getUserStatus() async {
     return storage.read(key: 'userStatus');
   }
 
   Future<void> setToken(String accessToken) async {
     await storage.write(key: 'access_token', value: accessToken);
+  }
+
+  Future<void> setAccessCode(String accessToken) async {
+    await storage.write(key: 'access_code', value: accessToken);
   }
 
   Future<void> setUserStatus(String userStatus) async {
