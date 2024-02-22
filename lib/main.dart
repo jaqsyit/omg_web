@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      title: 'Коорпоративтік оқу орталығы',
+      title: 'Корпоративтік оқу орталығы',
       home: FutureBuilder<String?>(
         future: storage.getUserStatus(),
         builder: (context, snapshot) {

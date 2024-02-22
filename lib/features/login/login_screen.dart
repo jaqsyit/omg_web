@@ -56,7 +56,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           const Text(
-                            'Коорпоративтік Оқу Орталығы',
+                            'Корпоративтік Оқу Орталығы',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,

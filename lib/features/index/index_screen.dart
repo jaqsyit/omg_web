@@ -29,8 +29,7 @@ class IndexScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:
-                              const EdgeInsets.symmetric(vertical: 50),
+                          padding: const EdgeInsets.symmetric(vertical: 50),
                           child: Image.asset(
                             'assets/img/logo_round.jpeg',
                             scale: 2,
@@ -42,7 +41,7 @@ class IndexScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 50),
                         const Text(
-                          'Коорпоративті Оқу Орталығы',
+                          'Корпоративті Оқу Орталығы',
                           style: CustomTextStyles.s26w700cb,
                         ),
                         const SizedBox(height: 100),
