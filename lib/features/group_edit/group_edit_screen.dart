@@ -652,7 +652,7 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.red)),
                     onPressed: () {
-                      // deleteGroup(widget.group!.id);
+                      deleteGroup(widget.group!.id!);
                     },
                     child: const Text('Емтиханды өшіру'),
                   ),
