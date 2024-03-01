@@ -30,7 +30,7 @@ migrate_working_dir/
 .packages
 .pub-cache/
 .pub/
-/build/
+# /build/
 
 # Symbolication related
 app.*.symbols
@@ -42,3 +42,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+build/c851ff47e3639af1ef9ce9a7708ed9b6.cache.dill.track.dill
+build/d1e25e033e83e0237fd5ee906d81ede1.cache.dill.track.dill
+build/581509f6f23135dceee3f14386881676/_composite.stamp
+build/581509f6f23135dceee3f14386881676/gen_dart_plugin_registrant.stamp
+build/581509f6f23135dceee3f14386881676/gen_localizations.stamp
+build/46d1529db4071e21a5781e49cf14ffb8/_composite.stamp
+build/46d1529db4071e21a5781e49cf14ffb8/gen_dart_plugin_registrant.stamp
+build/46d1529db4071e21a5781e49cf14ffb8/gen_localizations.stamp
