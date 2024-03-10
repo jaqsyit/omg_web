@@ -96737,7 +96737,7 @@ return A.C(new A.j5().tx(),$async$tw)
 case 3:e=a2
 f=e
 p=5
-k=A.aEJ("http","localhost:81",g,c)
+k=A.aEJ("http","omg-koo.kz:81",g,c)
 j=t.N
 j=A.a6(["Authorization","Bearer "+A.j(f),"Accept","application/json"],j,j)
 s=8
@@ -96775,7 +96775,7 @@ return A.C(new A.j5().tx(),$async$xO)
 case 5:f=a2
 case 4:A.dj(b)
 p=7
-k=A.aEJ("http","localhost:81",g,d)
+k=A.aEJ("http","omg-koo.kz:81",g,d)
 j=f
 i=t.N
 j=a0?A.a6(["Authorization","Bearer "+A.j(j),"Accept","application/json"],i,i):A.a6(["Accept","application/json"],i,i)
@@ -96817,7 +96817,7 @@ case 3:s=5
 return A.C(new A.j5().tx(),$async$w9)
 case 5:e=a1
 case 4:p=7
-g=A.aEJ("http","localhost:81",f,c)
+g=A.aEJ("http","omg-koo.kz:81",f,c)
 k=e
 j=t.N
 s=10
