@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 // const String BASE_URL = 'omg-koo.kz';
-const String BASE_URL = 'localhost';
+const String BASE_URL = 'localhost:81';
 // const String BASE_URL = '127.0.0.1:8000';
 // const String BASE_URL = '192.168.31.106:8000';
 const String MID_URL = '/api/v1';
