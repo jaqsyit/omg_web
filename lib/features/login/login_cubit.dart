@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:omg/services/storage_helper.dart';
 import 'package:omg/widgets/loading_dialog.dart';
 
+import '../practice/practice_screen.dart';
+
 class LoginCubit extends Cubit<bool> {
   final BuildContext context;
   LoginCubit({required this.context}) : super(false);
@@ -127,6 +129,16 @@ class LoginCubit extends Cubit<bool> {
         ),
       );
     }
+  }
+
+  Future<void> startPractice() async {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PracticeScreen(),
+      ),
+      (route) => false,
+    );
   }
 
   void enableAutoValidate() {
