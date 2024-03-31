@@ -6,16 +6,17 @@ class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.secondary,
-          ],
-        ),
-      ),
+      // decoration: BoxDecoration(
+      //   gradient: LinearGradient(
+      //     begin: Alignment.topRight,
+      //     end: Alignment.bottomLeft,
+      //     colors: [
+      //       Theme.of(context).colorScheme.primary,
+      //       Theme.of(context).colorScheme.secondary,
+      //     ],
+      //   ),
+      // ),
+      color: Colors.white,
       child: const Center(
         child: CircularProgressIndicator.adaptive(),
       ),

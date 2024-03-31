@@ -15,8 +15,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // loginController.text = 'm.aqyn';
-    // passwordController.text = '123123';
+    loginController.text = 'm.aqyn';
+    passwordController.text = '123123';
     // codeController.text = '456359';
     return BlocProvider(
       create: (_) => LoginCubit(context: context),
@@ -100,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                                         ),
                                         child: const Text(
                                           'Емтиханды бастау',
-                                          style: TextStyle(fontSize: 20),
+                                          style: TextStyle(fontSize: 20,color: Colors.white),
                                         ),
                                         onPressed: () async {
                                           await loginCubit.startTest(
@@ -182,7 +182,7 @@ class LoginScreen extends StatelessWidget {
                                           ),
                                           child: const Text(
                                             'Кіру',
-                                            style: TextStyle(fontSize: 20),
+                                            style: TextStyle(fontSize: 20,color: Colors.white),
                                           ),
                                           onPressed: () async {
                                             if (_formKey.currentState != null) {

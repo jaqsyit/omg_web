@@ -8,7 +8,8 @@ import 'package:omg/widgets/loading_widget.dart';
 
 class ExamingScreen extends StatefulWidget {
   final String? accessCode;
-  ExamingScreen({Key? key, this.accessCode}) : super(key: key);
+  final String? language;
+  ExamingScreen({Key? key, this.accessCode,this.language}) : super(key: key);
 
   @override
   ExamingScreenState createState() => ExamingScreenState();
@@ -21,7 +22,7 @@ class ExamingScreenState extends State<ExamingScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          ExamingCubit(context: context)..getExaming(widget.accessCode ?? ''),
+          ExamingCubit(context: context)..getExaming(widget.accessCode ?? '', widget.language ?? ''),
       child: Scaffold(
         body: SafeArea(
           child: BlocBuilder<ExamingCubit, ExamingState>(
@@ -90,7 +91,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                     ),
                                     Text(
                                       state.data!.questions[questionIndex]
-                                          .question, // Use questionIndex here
+                                          .question,
                                       style: CustomTextStyles.questionTextStyle,
                                     ),
                                     const SizedBox(height: 16.0),
@@ -161,7 +162,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                 },
                                 child: const Text(
                                   'Артқа',
-                                  style: CustomTextStyles.questionTextStyle,
+                                  style: CustomTextStyles.questionTextStyleWhite,
                                 ),
                               ),
                             const SizedBox(width: 16),
@@ -178,7 +179,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                                 },
                                 child: const Text(
                                   'Келесі',
-                                  style: CustomTextStyles.questionTextStyle,
+                                  style: CustomTextStyles.questionTextStyleWhite,
                                 ),
                               ),
                             const Spacer(),
@@ -196,7 +197,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                               ),
                               child: const Text(
                                 'Аяқтау',
-                                style: CustomTextStyles.questionTextStyle,
+                                style: CustomTextStyles.questionTextStyleWhite,
                               ),
                               onPressed: () {
                                 showDialog(
@@ -227,7 +228,7 @@ class ExamingScreenState extends State<ExamingScreen> {
                 return ErrorColumn(
                   errMsg: state.errMsg,
                   onRetry: () async {
-                    await examingCubit.getExaming(widget.accessCode ?? '');
+                    await examingCubit.getExaming(widget.accessCode ?? '', widget.language ?? '');
                   },
                 );
               } else {

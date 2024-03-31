@@ -156,7 +156,7 @@ class ExamingCubit extends Cubit<ExamingState> {
     return _result;
   }
 
-  Future<void> getExaming(String? accessCode) async {
+  Future<void> getExaming(String? accessCode, String? language) async {
     if (state is! ExamingLoading) {
       emit(ExamingLoading());
     }
@@ -191,10 +191,11 @@ class ExamingCubit extends Cubit<ExamingState> {
     }
 
     if (questionsBox.isEmpty) {
-      final response = await NetworkHelper().post(
-          url: START_URL,
-          withToken: false,
-          body: {'accessCode': accessCode ?? ''});
+      final response =
+          await NetworkHelper().post(url: START_URL, withToken: false, body: {
+        'accessCode': accessCode ?? '',
+        'language': language ?? '',
+      });
 
       if (response is Response) {
         final decodedResponse = JsonDecoder().responseToMap(response);

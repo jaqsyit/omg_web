@@ -61,19 +61,40 @@ class ExamScreen extends StatelessWidget {
               const SizedBox(height: 100),
               const Text('Ескертулер'),
               const SizedBox(height: 100),
-              ElevatedButton(
-                onPressed: () async {
-                  StorageManager storage = StorageManager();
-                  await storage
-                      .setAccessCode(examData.exam.accessCode.toString())
-                      .whenComplete(
-                    () {
-                      ExamCubit(context: context, examData: examData)
-                          .startExam(examData.exam.accessCode);
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      StorageManager storage = StorageManager();
+                      await storage
+                          .setAccessCode(examData.exam.accessCode.toString())
+                          .whenComplete(
+                        () {
+                          ExamCubit(context: context, examData: examData)
+                              .startExam(examData.exam.accessCode, 'kk');
+                        },
+                      );
                     },
-                  );
-                },
-                child: const Text('БАСТАУ'),
+                    child: const Text('Емтиханды бастау'),
+                  ),
+                  const SizedBox(width: 50),
+                  ElevatedButton(
+                    onPressed: () async {
+                      StorageManager storage = StorageManager();
+                      await storage
+                          .setAccessCode(examData.exam.accessCode.toString())
+                          .whenComplete(
+                        () {
+                          ExamCubit(context: context, examData: examData)
+                              .startExam(examData.exam.accessCode, 'ru');
+                        },
+                      );
+                    },
+                    child: const Text('Начать экзамен'),
+                  ),
+                ],
               ),
             ],
           ),

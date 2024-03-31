@@ -12,7 +12,7 @@ class ExamCubit extends Cubit<ExamState> {
   ExamCubit({required this.context, required this.examData})
       : super(ExamLoading());
 
-  Future<void> startExam(int accessCode) async {
+  Future<void> startExam(int accessCode,String lang) async {
     final timerBox = await Hive.openBox<int>('timerBox');
     int differenceInSeconds =
         examData.exam.group.end.difference(examData.exam.group.start).inSeconds;
@@ -25,6 +25,7 @@ class ExamCubit extends Cubit<ExamState> {
             MaterialPageRoute(
               builder: (context) => ExamingScreen(
                 accessCode: accessCode.toString(),
+                language: lang,
               ),
             ),
             (route) => false,

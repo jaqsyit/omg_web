@@ -54,6 +54,11 @@ class CustomTextStyles {
     fontWeight: FontWeight.bold,
     fontSize: 25,
   );
+  static const questionTextStyleWhite = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 25,
+    color: Colors.white
+  );
   static const optionTextStyle = TextStyle(
     fontSize: 20,
   );

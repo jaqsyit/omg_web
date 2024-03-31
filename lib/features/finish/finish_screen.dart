@@ -220,7 +220,7 @@ class FinishScreenState extends State<FinishScreen> {
                                 },
                                 child: const Text(
                                   'Келесі',
-                                  style: CustomTextStyles.questionTextStyle,
+                                  style: CustomTextStyles.questionTextStyleWhite,
                                 ),
                               ),
                             const Spacer(),
@@ -238,7 +238,7 @@ class FinishScreenState extends State<FinishScreen> {
                               ),
                               child: const Text(
                                 'Келісемін',
-                                style: CustomTextStyles.questionTextStyle,
+                                style: CustomTextStyles.questionTextStyleWhite,
                               ),
                               onPressed: () {
                                 showDialog(

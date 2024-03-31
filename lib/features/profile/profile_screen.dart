@@ -42,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment:CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                                 '${state.data.surname} ${state.data.name} ${state.data.lastname}'),
@@ -55,7 +55,8 @@ class ProfileScreen extends StatelessWidget {
                               onPressed: () {
                                 ProfileCubit(context: context).logout();
                               },
-                              child: const Text('Шығу'),
+                              child: const Text('Шығу',
+                                  style: TextStyle(color: Colors.white)),
                             ),
                           ],
                         ),
