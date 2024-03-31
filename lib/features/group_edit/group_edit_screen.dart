@@ -16,6 +16,7 @@ import 'package:omg/services/network_helper.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class GroupEditScreen extends StatefulWidget {
   final Datum? group;
@@ -178,31 +179,48 @@ class _GroupEditScreenState extends State<GroupEditScreen> {
     }
   }
 
+  // Future<void> getAccessCode(int idGroup) async {
+  //   final response =
+  //       await NetworkHelper().get(url: ACCESS_CODES_URL, parameters: {
+  //     'id': idGroup.toString(),
+  //   });
+  //   if (response is Response) {
+  //     print(response.request?.url);
+  //     print(response.body);
+  //   } else {
+  //     print('Failed to get access code');
+  //   }
+  // }
+  // https://backend.omg-koo.kz/api/v1/access-codes/4?id=4
+
   Future<void> getAccessCode(int idGroup) async {
-    final response =
-        await NetworkHelper().get(url: ACCESS_CODES_URL, parameters: {
-      'id': idGroup.toString(),
-    });
+    // var url = Uri.parse(
+    //     'https://backend.omg-koo.kz/api/v1$ACCESS_CODES_URL/${idGroup.toString()}?id=${idGroup.toString()}');
+    // print(url);
 
-    if (response is Response) {
-      final body = json.decode(response.body);
+    try {
+      // var response = await http.get(url);
+      final response =
+          await NetworkHelper().get(url: ACCESS_CODES_URL, parameters: {
+        'id': idGroup.toString(),
+      });
+      // Проверка статуса ответа
+      if (response.statusCode == 200) {
+        // Обработка байтов файла
+        print(response.body);
+        var blob = html.Blob([response.bodyBytes]);
+        var downloadUrl = html.Url.createObjectUrlFromBlob(blob);
 
-      if (body['success'] != null) {
-        final String fileUrl = body['success'];
-        print(fileUrl);
+        var anchor = html.AnchorElement(href: downloadUrl)
+          ..setAttribute("download", "access_code_$idGroup.pdf")
+          ..click();
 
-        if (kIsWeb) {
-          html.window.open(fileUrl, '_blank');
-        } else {
-          if (await canLaunch(fileUrl)) {
-            await launch(fileUrl);
-          } else {
-            throw 'Could not launch $fileUrl';
-          }
-        }
+        html.Url.revokeObjectUrl(downloadUrl);
+      } else {
+        print('Failed to get access code, status code: ${response.statusCode}');
       }
-    } else {
-      print('Failed to get access code');
+    } catch (e) {
+      print('Exception occurred: $e');
     }
   }
 
