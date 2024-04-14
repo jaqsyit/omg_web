@@ -26,7 +26,7 @@ class ApiClient {
 
     try {
       final response = await http.get(
-        Uri.http(BASE_URL, requestURL, parameters),
+        Uri.https(BASE_URL, requestURL, parameters),
         headers: _buildHeaders(withToken, accessToken),
       );
 
@@ -55,7 +55,7 @@ class ApiClient {
 
     try {
       final response = await http.post(
-        Uri.http(BASE_URL, requestURL, parameters),
+        Uri.https(BASE_URL, requestURL, parameters),
         headers: _buildHeaders(withToken, accessToken),
         body: body ?? jsonBody,
       );
@@ -83,7 +83,7 @@ class ApiClient {
 
     try {
       final response = await http.delete(
-        Uri.http(BASE_URL, requestURL, parameters),
+        Uri.https(BASE_URL, requestURL, parameters),
         headers: _buildHeaders(withToken, accessToken),
       );
 

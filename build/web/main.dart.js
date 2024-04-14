@@ -97575,7 +97575,7 @@ return A.y(new A.hP().tF(),$async$tE)
 case 3:e=a2
 f=e
 p=5
-k=A.aG0("http","backend.omg-koo.kz",g,c)
+k=A.aG0("https","backend.omg-koo.kz",g,c)
 j=t.N
 j=A.a5(["Authorization","Bearer "+A.j(f),"Accept","application/json"],j,j)
 s=8
@@ -97613,7 +97613,7 @@ return A.y(new A.hP().tF(),$async$xY)
 case 5:f=a2
 case 4:A.d3(b)
 p=7
-k=A.aG0("http","backend.omg-koo.kz",g,d)
+k=A.aG0("https","backend.omg-koo.kz",g,d)
 j=f
 i=t.N
 j=a0?A.a5(["Authorization","Bearer "+A.j(j),"Accept","application/json"],i,i):A.a5(["Accept","application/json"],i,i)
@@ -97655,7 +97655,7 @@ case 3:s=5
 return A.y(new A.hP().tF(),$async$wj)
 case 5:e=a1
 case 4:p=7
-g=A.aG0("http","backend.omg-koo.kz",f,c)
+g=A.aG0("https","backend.omg-koo.kz",f,c)
 k=e
 j=t.N
 s=10
