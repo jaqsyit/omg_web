@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
-// const String BASE_URL = 'backend.omg-koo.kz';
-const String BASE_URL = 'localhost';
+const String BASE_URL = 'backend.omg-koo.kz';
+// const String BASE_URL = 'localhost';
 const String MID_URL = '/api/v1';
 
 const String LOGIN_URL = '/login';
@@ -16,3 +16,4 @@ const String EXAM_URL = '/exam';
 const String ACCESS_CODES_URL = '/access-codes';
 const String RESULT_EXAM_URL = '/results/download/exam';
 const String ORGS_URL = '/orgs';
+const String PRACTISE_URL = '/practice';

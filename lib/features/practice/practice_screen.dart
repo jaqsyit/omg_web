@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:omg/constants/styles.dart';
+import 'package:omg/features/practise/practise_screen.dart';
+// import 'package:omg/constants/styles.dart';
 
 class PracticeScreen extends StatefulWidget {
   final String? title;
@@ -122,7 +123,20 @@ class _PracticeScreenState extends State<PracticeScreen> {
                             'Практиканы бастау',
                             style: TextStyle(fontSize: 20, color: Colors.white),
                           ),
-                          onPressed: () async {},
+                          onPressed: () async {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PractiseScreen(
+                                  subject: selectedValueSubject,
+                                  chin: selectedValueChin,
+                                  language: selectedValueLang,
+                                  quantity: '40',
+                                ),
+                              ),
+                              (route) => false,
+                            );
+                          },
                         ),
                       ),
                     ],
